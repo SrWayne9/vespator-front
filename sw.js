@@ -2,7 +2,7 @@
 //  Vespator Front — Service Worker
 //  Permite uso offline y cacheo de recursos
 // ============================================================
-const CACHE_NAME = 'vespator-v1';
+const CACHE_NAME = 'vespator-v2';
 const CACHE_URLS = [
   '/',
   '/index.html',
@@ -11,7 +11,7 @@ const CACHE_URLS = [
   '/icons/icon-512.png',
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap'
 ];
-
+ 
 // Instalar: cachear todos los recursos esenciales
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -24,7 +24,7 @@ self.addEventListener('install', event => {
   );
   self.skipWaiting();
 });
-
+ 
 // Activar: limpiar caches antiguas
 self.addEventListener('activate', event => {
   event.waitUntil(
@@ -36,18 +36,18 @@ self.addEventListener('activate', event => {
   );
   self.clients.claim();
 });
-
+ 
 // Fetch: servir desde cache, con fallback a red
 self.addEventListener('fetch', event => {
   // No interceptar peticiones al Apps Script de Drive (necesitan red)
   if (event.request.url.includes('script.google.com')) {
     return;
   }
-
+ 
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
+ 
       return fetch(event.request).then(response => {
         // Solo cachear respuestas válidas y del mismo origen o fuentes Google
         if (
