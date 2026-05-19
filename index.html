@@ -308,45 +308,77 @@
   .theatre-name { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
   .theatre-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 12px; }
 
-  /* Twists toggle button */
+  /* Twists button */
   .theatre-twists-btn {
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
     background: rgba(200,169,74,0.07); border: 1px solid var(--gold-dim);
     color: var(--gold-dim); font-family: 'Cinzel', serif; font-size: 10px;
-    letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px;
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 12px;
     cursor: pointer; width: 100%; transition: all 0.2s;
   }
-  .theatre-twists-btn:hover { background: rgba(200,169,74,0.14); color: var(--gold); border-color: var(--gold); }
-  .theatre-twists-btn .btn-arrow { transition: transform 0.25s; font-size: 9px; }
-  .theatre-twists-btn.open { color: var(--gold); border-color: var(--gold); background: rgba(200,169,74,0.12); }
-  .theatre-twists-btn.open .btn-arrow { transform: rotate(90deg); }
+  .theatre-twists-btn:hover { background: rgba(200,169,74,0.16); color: var(--gold); border-color: var(--gold); }
 
-  /* Twists panel */
-  .theatre-twists-panel {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.35s ease, padding 0.25s ease;
-    padding: 0;
+  /* ── TWISTS MODAL ── */
+  #twistsModal {
+    display: none; position: fixed; inset: 0; z-index: 800;
+    align-items: center; justify-content: center;
+    padding: 16px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
   }
-  .theatre-twists-panel.open {
-    max-height: 600px;
-    padding-top: 12px;
+  #twistsModal.open { display: flex; }
+
+  .twists-modal-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-top: 3px solid var(--gold);
+    width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.9);
+    position: relative;
+    animation: modalIn 0.2s ease;
   }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .twists-modal-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--bg-card); z-index: 1;
+  }
+  .twists-modal-icon { font-size: 22px; flex-shrink: 0; }
+  .twists-modal-title {
+    font-family: 'Cinzel', serif; font-size: 15px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase;
+    flex: 1;
+  }
+  .twists-modal-close {
+    width: 32px; height: 32px; border-radius: 2px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-dim); font-size: 18px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .twists-modal-close:hover { background: rgba(192,57,43,0.15); border-color: var(--red-bright); color: var(--red-bright); }
+
+  .twists-modal-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+
   .twist-item {
     background: var(--bg-panel); border: 1px solid var(--border);
-    border-left: 3px solid var(--gold-dim);
-    padding: 10px 12px; margin-bottom: 8px;
+    border-left: 3px solid var(--gold-dim); padding: 14px 16px;
   }
-  .twist-item:last-child { margin-bottom: 0; }
   .twist-roll {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
     color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
   }
   .twist-name {
-    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
-    color: var(--text-bright); margin-bottom: 5px; letter-spacing: 0.06em;
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    color: var(--text-bright); margin-bottom: 6px; letter-spacing: 0.06em;
   }
-  .twist-rule { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .twist-rule { font-size: 14px; color: var(--text-dim); line-height: 1.6; }
 
   /* INFRASTRUCTURE */
   .infra-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
@@ -1439,11 +1471,8 @@
       <div class="theatre-icon">⊕</div>
       <div class="theatre-name">Puerto Espacial</div>
       <div class="theatre-desc">Centro estratégico de comunicación y despliegue. Facilita maniobra y control de objetivos. Favorece ejércitos de élite que pueden aprovechar el Retroceso.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Bloqueo de Coordenadas</div>
-          <div class="twist-name">Coordinate Lock</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Puerto Espacial')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Coordinate Lock</div>
           <div class="twist-rule">Al final de la fase de Mando, cada marcador de objetivo que el jugador activo controla permanece bajo su control hasta que el Nivel de Control del oponente sobre ese marcador sea mayor que el suyo al final de una fase.</div>
         </div>
         <div class="twist-item">
@@ -1464,11 +1493,8 @@
       <div class="theatre-icon">◇</div>
       <div class="theatre-name">Yermos Desolados</div>
       <div class="theatre-desc">Llanuras abiertas y baldías. Favorece unidades de Infantería y Montadas para maniobrar agresivamente y reposicionarse.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Suelo Abierto</div>
-          <div class="twist-name">Open Ground</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Yermos Desolados')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Open Ground</div>
           <div class="twist-rule">Los jugadores pueden repetir las tiradas de Avance y Carga realizadas por unidades de su ejército (excluidos Monstruos y Vehículos).</div>
         </div>
         <div class="twist-item">
@@ -1489,11 +1515,8 @@
       <div class="theatre-icon">✦</div>
       <div class="theatre-name">Jungla Xenoflora</div>
       <div class="theatre-desc">Vegetación alienígena densa y peligrosa. Favorece ejércitos orientados al cuerpo a cuerpo. Penaliza el Retroceso.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Esporas Carniceras</div>
-          <div class="twist-name">Slaughter Spores</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Jungla Xenoflora')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Slaughter Spores</div>
           <div class="twist-rule">Mejora en 1 la característica de Fuerza de las armas de combate equipadas por los modelos.</div>
         </div>
         <div class="twist-item">
@@ -1514,11 +1537,8 @@
       <div class="theatre-icon">◎</div>
       <div class="theatre-name">Zona de Radiación</div>
       <div class="theatre-desc">Cenizas irradiadas. Reduce la letalidad y perturba las comunicaciones. Favorece estilos de juego atricionales.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Tormenta de Ceniza Tóxica</div>
-          <div class="twist-name">Toxic Ash Storm</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Zona de Radiación')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Toxic Ash Storm</div>
           <div class="twist-rule">En ronda 2: solo se puede disparar a unidades a 18" o menos. En ronda 3: solo a 12" o menos. En ronda 4: solo a 18" o menos.</div>
         </div>
         <div class="twist-item">
@@ -1539,11 +1559,8 @@
       <div class="theatre-icon">⬡</div>
       <div class="theatre-name">Complejo de Forja</div>
       <div class="theatre-desc">Instalaciones industriales activas. Favorece unidades resistentes. Perjudica a tropas ligeras por los gases y el calor extremo.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Corrosión Termal</div>
-          <div class="twist-name">Thermic Corrosion</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Complejo de Forja')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Thermic Corrosion</div>
           <div class="twist-rule">Cada vez que un modelo realiza un ataque que apunta a una unidad enemiga (excluidos Monstruos y Vehículos) a 9" o menos, mejora en 1 la Penetración de Armadura de ese ataque.</div>
         </div>
         <div class="twist-item">
@@ -1564,11 +1581,8 @@
       <div class="theatre-icon">▦</div>
       <div class="theatre-name">Barriada Urbana</div>
       <div class="theatre-desc">Bloques de habitáculos y ruinas densas. Favorece infantería que aprovecha los terrenos de área para sobrevivir o atacar.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Humos Voraces</div>
-          <div class="twist-name">Roiling Fumes</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Barriada Urbana')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Roiling Fumes</div>
           <div class="twist-rule">Mientras un modelo esté completamente dentro de un Terreno de Área, ese modelo tiene la habilidad Sigilo (Stealth).</div>
         </div>
         <div class="twist-item">
@@ -1589,11 +1603,8 @@
       <div class="theatre-icon">◈</div>
       <div class="theatre-name">Instalación de Extracción</div>
       <div class="theatre-desc">Minas activas y maquinaria peligrosa. Favorece ataques contra unidades resistentes con explosivos recuperados.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Cargas Santificadas</div>
-          <div class="twist-name">Sanctified Charges</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Instalación de Extracción')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Sanctified Charges</div>
           <div class="twist-rule">Al inicio de cada ronda, cada jugador selecciona en secreto un marcador de objetivo completamente en Tierra de Nadie. Una vez por batalla, cuando una unidad enemiga termine un movimiento Normal, Avance o Retroceso en rango de ese marcador, el jugador puede revelarlo y tirar 1D6: con 2+, esa unidad sufre D6+1 heridas mortales.</div>
         </div>
         <div class="twist-item">
@@ -1614,11 +1625,8 @@
       <div class="theatre-icon">△</div>
       <div class="theatre-name">Tierras Muertas</div>
       <div class="theatre-desc">Desiertos baldíos y zonas devastadas. Favorece Monstruos y Vehículos con mayor velocidad, durabilidad y letalidad.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Expansión Desolada</div>
-          <div class="twist-name">Bleak Expanse</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Tierras Muertas')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Bleak Expanse</div>
           <div class="twist-rule">Añade 3" a la característica de Movimiento de las unidades de Monstruos y Vehículos.</div>
         </div>
         <div class="twist-item">
@@ -1639,11 +1647,8 @@
       <div class="theatre-icon">⬢</div>
       <div class="theatre-name">Complejo de Tumbas</div>
       <div class="theatre-desc">Estructuras Necrón emergiendo del subsuelo. Efectos impredecibles y variados que no favorecen a ningún estilo en particular.</div>
-      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
-      <div class="theatre-twists-panel">
-        <div class="twist-item">
-          <div class="twist-roll">1–2 · Compresión Espacio-Tiempo</div>
-          <div class="twist-name">Space-time Compression</div>
+      <button class="theatre-twists-btn" onclick="openTwistsModal('Complejo de Tumbas')">⚄ Ver Giros (1D6)</button>
+    <div class="twist-name">Space-time Compression</div>
           <div class="twist-rule">Añade 2 a todas las tiradas de Avance.</div>
         </div>
         <div class="twist-item">
@@ -2209,6 +2214,17 @@
     </div>
   </div>
 </section>
+<!-- TWISTS MODAL -->
+<div id="twistsModal" onclick="closeTwistsModal(event)">
+  <div class="twists-modal-box" id="twistsModalBox">
+    <div class="twists-modal-header">
+      <div class="twists-modal-icon" id="twistsModalIcon"></div>
+      <div class="twists-modal-title" id="twistsModalTitle"></div>
+      <button class="twists-modal-close" onclick="closeTwistsModal()">✕</button>
+    </div>
+    <div class="twists-modal-body" id="twistsModalBody"></div>
+  </div>
+</div>
 
 </main>
 
@@ -2876,21 +2892,142 @@ function showSection(id) {
   if (id === 'orders')  { renderOrdersPanel(); renderOrderHistory(); }
 }
 
-// ===================== THEATRE TWISTS TOGGLE =====================
-function toggleTwists(btn) {
-  const panel = btn.nextElementSibling;
-  const isOpen = panel.classList.contains('open');
-  // Close all other open panels in the same grid
-  document.querySelectorAll('.theatre-twists-panel.open').forEach(p => {
-    p.classList.remove('open');
-    p.previousElementSibling.classList.remove('open');
-  });
-  // Toggle this one
-  if (!isOpen) {
-    panel.classList.add('open');
-    btn.classList.add('open');
-  }
+// ===================== THEATRE TWISTS MODAL =====================
+const TWISTS_DATA = {
+  'Puerto Espacial': {
+    icon: '⊕',
+    twists: [
+      { roll: '1–2', name: 'Bloqueo de Coordenadas', nameEn: 'Coordinate Lock',
+        rule: 'Al final de la fase de Mando, cada marcador de objetivo que el jugador activo controla permanece bajo su control hasta que el Nivel de Control del oponente sobre ese marcador sea mayor que el suyo al final de una fase.' },
+      { roll: '3–4', name: 'Red de Vigilancia', nameEn: 'Vid-feed Network',
+        rule: 'Cada vez que una unidad Retrocede, ese jugador puede elegir una: hasta el final del turno, esa unidad puede disparar en un turno en que Retrocedió; o hasta el final del turno, esa unidad puede declarar una carga en un turno en que Retrocedió.' },
+      { roll: '5–6', name: 'Santuarios de Embarque', nameEn: 'Embarkation Shrines',
+        rule: 'Al final del turno de cada jugador, su oponente puede seleccionar una unidad de su ejército que esté en rango de uno o más marcadores de objetivo y no en Rango de Trabado. Esa unidad se retira del campo y pasa a Reservas Estratégicas.' },
+    ]
+  },
+  'Yermos Desolados': {
+    icon: '◇',
+    twists: [
+      { roll: '1–2', name: 'Suelo Abierto', nameEn: 'Open Ground',
+        rule: 'Los jugadores pueden repetir las tiradas de Avance y Carga realizadas por unidades de su ejército (excluidos Monstruos y Vehículos).' },
+      { roll: '3–4', name: 'Ojo del Juicio', nameEn: 'Eye of Judgement',
+        rule: 'Al final del paso Declarar Formaciones de Batalla, empezando por el Atacante, cada jugador selecciona hasta dos unidades de su ejército (excluidos Monstruos y Vehículos). Los modelos de esas unidades tienen la habilidad Exploradores 6".' },
+      { roll: '5–6', name: 'Combatientes Expuestos', nameEn: 'Exposed Combatants',
+        rule: 'Las armas a distancia equipadas por modelos (excluidos Monstruos y Vehículos) obtienen la habilidad [ASALTO].' },
+    ]
+  },
+  'Jungla Xenoflora': {
+    icon: '✦',
+    twists: [
+      { roll: '1–2', name: 'Esporas Carniceras', nameEn: 'Slaughter Spores',
+        rule: 'Mejora en 1 la característica de Fuerza de las armas de combate equipadas por los modelos.' },
+      { roll: '3–4', name: 'Infierno Verde', nameEn: 'Green Hell',
+        rule: 'Las plantas y árboles son tan densos y su bioirradiación tan extraña que los guerreros no pueden detectar al enemigo hasta que están encima. Las unidades no pueden usar la Estratagema de Fuego de Cobertura (Fire Overwatch).' },
+      { roll: '5–6', name: 'Flora Depredadora', nameEn: 'Predatory Plantlife',
+        rule: 'Cada vez que una unidad (excluidos Monstruos y Vehículos) Retrocede, todos sus modelos deben superar una prueba de Huida Desesperada. Si la unidad está Sacudida de Batalla, resta 1 a cada prueba.' },
+    ]
+  },
+  'Zona de Radiación': {
+    icon: '◎',
+    twists: [
+      { roll: '1–2', name: 'Tormenta de Ceniza Tóxica', nameEn: 'Toxic Ash Storm',
+        rule: 'En ronda 2: solo se puede disparar a unidades a 18" o menos. En ronda 3: solo a 12" o menos. En ronda 4: solo a 18" o menos.' },
+      { roll: '3–4', name: 'Malestar Radiactivo', nameEn: 'Rad Malaise',
+        rule: 'Cada vez que un modelo realiza un ataque de combate que apunta a una unidad enemiga, si esa unidad enemiga realizó un movimiento de Carga este turno, añade 1 a la tirada de Impacto.' },
+      { roll: '5–6', name: 'Interferencia Esotérica', nameEn: 'Esoteric Interference',
+        rule: 'Salvo el 1PC que se gana al inicio de la fase de Mando, los jugadores no pueden ganar PC adicionales de ninguna fuente (incluidos otros PC ganados al inicio de la fase de Mando).' },
+    ]
+  },
+  'Complejo de Forja': {
+    icon: '⬡',
+    twists: [
+      { roll: '1–2', name: 'Corrosión Termal', nameEn: 'Thermic Corrosion',
+        rule: 'Cada vez que un modelo realiza un ataque que apunta a una unidad enemiga (excluidos Monstruos y Vehículos) a 9" o menos, mejora en 1 la Penetración de Armadura de ese ataque.' },
+      { roll: '3–4', name: 'Ventilación Plásmida', nameEn: 'Plasmic Venting',
+        rule: 'Al inicio de la ronda, si la ventilación no ha ocurrido, el Atacante tira 1D6: con un resultado igual o menor al número de ronda actual, ocurre la ventilación. Cuando el vapor se libera, tira 1D6 por cada unidad no en rango de un marcador: si el resultado es igual o mayor que su Resistencia, esa unidad queda Fijada hasta el final de la ronda (−2" Mov, −2 a tiradas de Carga).' },
+      { roll: '5–6', name: 'Combustibles Volátiles', nameEn: 'Volatile Combustibles',
+        rule: 'Cada vez que los jugadores determinan cuántos ataques se realizan con un arma de Ráfaga (Blast), añade 1 adicional al resultado.' },
+    ]
+  },
+  'Barriada Urbana': {
+    icon: '▦',
+    twists: [
+      { roll: '1–2', name: 'Humos Voraces', nameEn: 'Roiling Fumes',
+        rule: 'Mientras un modelo esté completamente dentro de un Terreno de Área, ese modelo tiene la habilidad Sigilo (Stealth).' },
+      { roll: '3–4', name: 'Posiciones de Fuego', nameEn: 'Firing Positions',
+        rule: 'Mientras una unidad esté completamente dentro de un Terreno de Área, esa unidad puede ser objetivo de la Estratagema Fuego de Cobertura por 0PC, y los impactos se anotan con tiradas de Impacto sin modificar de 5+.' },
+      { roll: '5–6', name: 'Hacia las Profundidades', nameEn: 'Into the Depths',
+        rule: 'Al final del turno de cada jugador, su oponente puede seleccionar una unidad completamente dentro de un Terreno de Área y no en Rango de Trabado. Esa unidad se retira del campo y pasa a Reservas Estratégicas.' },
+    ]
+  },
+  'Instalación de Extracción': {
+    icon: '◈',
+    twists: [
+      { roll: '1–2', name: 'Cargas Santificadas', nameEn: 'Sanctified Charges',
+        rule: 'Al inicio de cada ronda, cada jugador selecciona en secreto un marcador de objetivo en Tierra de Nadie. Una vez por batalla, cuando una unidad enemiga termine un movimiento en rango de ese marcador, el jugador puede revelarlo y tirar 1D6: con 2+, esa unidad sufre D6+1 heridas mortales.' },
+      { roll: '3–4', name: 'Lecho Rocoso Fracturado', nameEn: 'Crumbling Bedrock',
+        rule: 'Cada vez que un modelo realiza un ataque a distancia que apunta a una unidad enemiga a 12" o menos, ese jugador puede ignorar cualquier o todos los modificadores a la Habilidad de Ballesta, la tirada de Impacto y la tirada de Herida de ese ataque.' },
+      { roll: '5–6', name: 'Sacudida Tectónica', nameEn: 'Tectonic Shock',
+        rule: 'Cada vez que un ataque apunta a una unidad en rango de uno o más marcadores de objetivo en Tierra de Nadie, ese ataque tiene la habilidad [GOLPES LETALES].' },
+    ]
+  },
+  'Tierras Muertas': {
+    icon: '△',
+    twists: [
+      { roll: '1–2', name: 'Expansión Desolada', nameEn: 'Bleak Expanse',
+        rule: 'Añade 3" a la característica de Movimiento de las unidades de Monstruos y Vehículos.' },
+      { roll: '3–4', name: 'Afloramientos Rocosos', nameEn: 'Rocky Outcroppings',
+        rule: 'Cada vez que una unidad de Monstruos o Vehículos permanece Estacionaria, hasta el final del turno, cada vez que un modelo de esa unidad realiza un ataque a distancia, repite una tirada de Impacto de 1.' },
+      { roll: '5–6', name: 'Manto de Polvo', nameEn: 'Shroud of Dust',
+        rule: 'Cada vez que una unidad de Monstruos o Vehículos realiza un movimiento de Avance, hasta el inicio del siguiente turno, los modelos de esa unidad tienen la habilidad Sigilo (Stealth).' },
+    ]
+  },
+  'Complejo de Tumbas': {
+    icon: '⬢',
+    twists: [
+      { roll: '1–2', name: 'Compresión Espacio-Tiempo', nameEn: 'Space-time Compression',
+        rule: 'Añade 2 a todas las tiradas de Avance.' },
+      { roll: '3–4', name: 'Energías Abrumadoras', nameEn: 'Overpowering Energies',
+        rule: 'Cada vez que una unidad es seleccionada para disparar o luchar, puede usar esta regla. Si lo hace, hasta el final de la fase, añade 2 a la Fuerza de las armas de esa unidad, y esas armas obtienen la habilidad [PELIGROSO].' },
+      { roll: '5–6', name: 'Blindaje Cuántico', nameEn: 'Quantum Shielding',
+        rule: 'Los modelos tienen una salvación invulnerable de 5+ contra ataques a distancia.' },
+    ]
+  },
+};
+
+function openTwistsModal(theatreName) {
+  const data = TWISTS_DATA[theatreName];
+  if (!data) return;
+
+  document.getElementById('twistsModalIcon').textContent = data.icon;
+  document.getElementById('twistsModalTitle').textContent = theatreName + ' — Giros';
+
+  const body = document.getElementById('twistsModalBody');
+  body.innerHTML = data.twists.map(t => `
+    <div class="twist-item">
+      <div class="twist-roll">D6: ${t.roll}</div>
+      <div class="twist-name">${t.name} <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);font-weight:normal;">(${t.nameEn})</span></div>
+      <div class="twist-rule">${t.rule}</div>
+    </div>`).join('');
+
+  document.getElementById('twistsModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeTwistsModal(event) {
+  // Close if clicking the backdrop (not the box itself)
+  if (event && event.target !== document.getElementById('twistsModal')) return;
+  document.getElementById('twistsModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Also close on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('twistsModal')?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
 
 const FACTIONS_ORDER = [
   { id: 'tyranid', name: 'Tiránidos', player: 'Alex',  color: '#e74c3c', barColor: '#c0392b' },
