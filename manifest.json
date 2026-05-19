@@ -1,0 +1,39 @@
+{
+  "name": "Guerra en el Frente Vespator",
+  "short_name": "Vespator",
+  "description": "Guía y rastreador de campaña — Warhammer 40.000",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#04060a",
+  "theme_color": "#04060a",
+  "lang": "es",
+  "categories": ["games", "utilities"],
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-167.png", "sizes": "167x167", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Rastreador",
+      "short_name": "Rastreador",
+      "description": "Ir al rastreador de campaña",
+      "url": "/index.html#tracker",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mapa",
+      "short_name": "Mapa",
+      "description": "Ver el mapa del frente",
+      "url": "/index.html#mapview",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -1,0 +1,3750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vespator">
+<meta name="application-name" content="Vespator Front">
+<meta name="theme-color" content="#04060a">
+<meta name="description" content="Guía y rastreador de campaña para Guerra en el Frente Vespator — Warhammer 40.000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<title>Guerra en el Frente Vespator — Guía de Campaña</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg-deep: #04060a;
+    --bg-panel: #080c12;
+    --bg-card: #0d1520;
+    --bg-card2: #111925;
+    --border: #1e2d42;
+    --border-glow: #2a4060;
+    --gold: #c8a94a;
+    --gold-dim: #7a6228;
+    --gold-bright: #f0d070;
+    --text: #c8d4e0;
+    --text-dim: #6a7e94;
+    --text-bright: #e8f0f8;
+    --accent: #3a7ab5;
+    --red-tyranid: #c0392b;
+    --red-bright: #e74c3c;
+    --red-dim: #6b1f17;
+    --green-necron: #27ae60;
+    --green-bright: #2ecc71;
+    --green-dim: #14572f;
+    --blue-ultra: #2980b9;
+    --blue-bright: #3498db;
+    --blue-dim: #154360;
+    --destroyed: #3d3d3d;
+    --scanline: rgba(0,150,255,0.03);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, var(--scanline) 0px, var(--scanline) 1px, transparent 1px, transparent 3px),
+      radial-gradient(ellipse at 20% 20%, rgba(58,122,181,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(192,57,43,0.04) 0%, transparent 60%);
+  }
+
+  /* NAVIGATION */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(4,6,10,0.95);
+    border-bottom: 1px solid var(--border-glow);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; gap: 0;
+    padding: 0;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.8);
+  }
+  nav .nav-brand {
+    padding: 12px 24px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  nav .nav-tabs {
+    display: flex; gap: 0; flex: 1; overflow-x: auto;
+  }
+  nav .nav-tab {
+    padding: 14px 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    cursor: pointer;
+    border: none; background: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  nav .nav-tab:hover { color: var(--gold); background: rgba(200,169,74,0.05); }
+  nav .nav-tab.active { color: var(--gold-bright); border-bottom-color: var(--gold); background: rgba(200,169,74,0.08); }
+
+  /* MAIN */
+  main { padding-top: 50px; }
+
+  .section { display: none; padding: 40px 32px; max-width: 1200px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 60px 32px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(58,122,181,0.05) 0%, transparent 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(200,169,74,0.01) 2px, rgba(200,169,74,0.01) 4px);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    border: 1px solid var(--gold-dim);
+    padding: 4px 16px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(32px, 5vw, 60px);
+    font-weight: 900;
+    color: var(--gold-bright);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 40px rgba(200,169,74,0.3), 0 2px 4px rgba(0,0,0,0.8);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .hero h2 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(14px, 2vw, 20px);
+    font-weight: 400;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .faction-badges {
+    display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+  }
+  .faction-badge {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px;
+    border: 1px solid;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+  .faction-badge.tyranid { border-color: var(--red-tyranid); color: var(--red-bright); background: rgba(192,57,43,0.1); }
+  .faction-badge.necron { border-color: var(--green-necron); color: var(--green-bright); background: rgba(39,174,96,0.1); }
+  .faction-badge.ultramarine { border-color: var(--blue-ultra); color: var(--blue-bright); background: rgba(41,128,185,0.1); }
+  .faction-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .faction-badge.tyranid .faction-dot { background: var(--red-bright); }
+  .faction-badge.necron .faction-dot { background: var(--green-bright); }
+  .faction-badge.ultramarine .faction-dot { background: var(--blue-bright); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    letter-spacing: 0.2em;
+    border: 1px solid var(--gold-dim);
+    padding: 4px 10px;
+  }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 2.5vw, 28px);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .card p { margin-bottom: 10px; color: var(--text); font-size: 15px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* PHASE STEPS */
+  .phase-list { display: flex; flex-direction: column; gap: 16px; }
+  .phase-step {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+  .phase-step-num {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(200,169,74,0.1);
+    border: 1px solid var(--gold-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: bold;
+  }
+  .phase-step-content h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .phase-step-content p { font-size: 14px; color: var(--text); }
+
+  /* OPERATION CARDS */
+  .ops-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .op-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px;
+    position: relative;
+    cursor: default;
+    transition: border-color 0.2s;
+  }
+  .op-card:hover { border-color: var(--border-glow); }
+  .op-card-tag {
+    position: absolute; top: -1px; right: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    padding: 3px 10px;
+    text-transform: uppercase;
+  }
+  .op-card-tag.battle { background: rgba(192,57,43,0.8); color: #fff; }
+  .op-card-tag.move { background: rgba(41,128,185,0.8); color: #fff; }
+  .op-card-tag.build { background: rgba(200,169,74,0.7); color: #000; }
+  .op-card-tag.special { background: rgba(39,174,96,0.7); color: #000; }
+  .op-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-right: 80px;
+  }
+  .op-card p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+  .op-card ul { padding-left: 16px; margin-top: 8px; }
+  .op-card ul li { font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+
+  /* ATTACK TYPES */
+  .attack-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .attack-item {
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red-tyranid);
+    padding: 14px 16px;
+  }
+  .attack-item h5 {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--red-bright); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .attack-item p { font-size: 13px; color: var(--text-dim); }
+
+  /* THEATRES */
+  .theatres-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .theatre-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px;
+  }
+  .theatre-icon { font-size: 28px; margin-bottom: 10px; }
+  .theatre-name {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .theatre-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+  .theatre-twists { font-size: 12px; color: var(--accent); }
+
+  /* INFRASTRUCTURE */
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .infra-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px;
+    position: relative;
+  }
+  .infra-type {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .infra-name {
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+    color: var(--text-bright); margin-bottom: 10px; letter-spacing: 0.06em;
+  }
+  .infra-max {
+    position: absolute; top: 18px; right: 18px;
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    color: var(--gold-dim); border: 1px solid var(--gold-dim);
+    padding: 2px 8px;
+  }
+  .infra-effect { font-size: 13px; color: var(--text-dim); }
+
+  /* CAMPAIGN TRACKER */
+  #tracker .intro-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  #tracker .intro-bar span {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    color: var(--gold-dim); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  #tracker .phase-control {
+    display: flex; align-items: center; gap: 12px; margin-left: auto;
+  }
+  #tracker .phase-control label {
+    font-family: 'Cinzel', serif; font-size: 12px; color: var(--text-dim);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  #tracker .phase-control input {
+    background: var(--bg-card2); border: 1px solid var(--border-glow);
+    color: var(--gold); font-family: 'Share Tech Mono', monospace;
+    font-size: 16px; padding: 6px 12px; width: 60px; text-align: center;
+  }
+  #tracker .phase-control button {
+    background: rgba(200,169,74,0.1); border: 1px solid var(--gold-dim);
+    color: var(--gold); font-family: 'Cinzel', serif; font-size: 12px;
+    padding: 7px 14px; cursor: pointer; letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  #tracker .phase-control button:hover { background: rgba(200,169,74,0.2); }
+
+  /* POINTS TRACKER */
+  .points-bar-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .points-bar-title {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--gold-dim); letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .points-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .points-faction {
+    flex: 1; min-width: 200px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .points-faction-label {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .points-faction-name {
+    font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .points-value {
+    font-family: 'Share Tech Mono', monospace; font-size: 20px; font-weight: bold;
+  }
+  .points-bar-bg {
+    height: 6px; background: var(--bg-panel); border: 1px solid var(--border);
+  }
+  .points-bar-fill { height: 100%; transition: width 0.5s ease; }
+  .tyranid-color { color: var(--red-bright); }
+  .necron-color { color: var(--green-bright); }
+  .ultra-color { color: var(--blue-bright); }
+  .tyranid-bg { background: var(--red-bright); }
+  .necron-bg { background: var(--green-bright); }
+  .ultra-bg { background: var(--blue-bright); }
+
+  /* PLANET GRID */
+  .planet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+  .planet-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .planet-card:hover { border-color: var(--border-glow); }
+  .planet-card.destroyed { opacity: 0.5; border-color: var(--destroyed); }
+  .planet-header {
+    padding: 12px 16px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .planet-name {
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+    color: var(--text-bright); letter-spacing: 0.08em;
+  }
+  .planet-system {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.15em; margin-top: 2px;
+  }
+  .planet-status-btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 4px 10px; border: 1px solid; cursor: pointer;
+    background: transparent; transition: all 0.2s;
+  }
+  .planet-status-btn.ok { border-color: var(--border); color: var(--text-dim); }
+  .planet-status-btn.ok:hover { border-color: var(--red-bright); color: var(--red-bright); }
+  .planet-status-btn.destroyed-state { border-color: var(--destroyed); color: #666; }
+  .planet-body { padding: 14px 16px; }
+
+  /* POWER LEVELS */
+  .power-section { margin-bottom: 14px; }
+  .power-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .power-rows { display: flex; flex-direction: column; gap: 6px; }
+  .power-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .power-faction-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .power-faction-name {
+    font-family: 'Cinzel', serif; font-size: 11px; color: var(--text-dim);
+    width: 90px; flex-shrink: 0; letter-spacing: 0.05em;
+  }
+  .power-pips { display: flex; gap: 4px; }
+  .pip {
+    width: 22px; height: 16px; border: 1px solid;
+    cursor: pointer; transition: all 0.15s; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace; font-size: 8px;
+  }
+  .pip.tyranid-pip { border-color: var(--red-dim); }
+  .pip.tyranid-pip.active { background: var(--red-tyranid); border-color: var(--red-bright); }
+  .pip.necron-pip { border-color: var(--green-dim); }
+  .pip.necron-pip.active { background: var(--green-necron); border-color: var(--green-bright); }
+  .pip.ultra-pip { border-color: var(--blue-dim); }
+  .pip.ultra-pip.active { background: var(--blue-ultra); border-color: var(--blue-bright); }
+  .power-num {
+    font-family: 'Share Tech Mono', monospace; font-size: 13px; font-weight: bold;
+    width: 20px; text-align: right;
+  }
+  .power-num.tyranid-color { color: var(--red-bright); }
+  .power-num.necron-color { color: var(--green-bright); }
+  .power-num.ultra-color { color: var(--blue-bright); }
+
+  /* THEATRES SECTION IN PLANET */
+  .theatres-section { margin-bottom: 14px; }
+  .theatres-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .theatre-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .theatre-tag {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    padding: 3px 8px; border: 1px solid var(--border);
+    color: var(--text-dim); cursor: default;
+  }
+
+  /* INFRASTRUCTURE SECTION IN PLANET */
+  .infra-section { }
+  .infra-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .infra-slots { display: flex; flex-direction: column; gap: 6px; }
+  .infra-slot {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-panel); border: 1px solid var(--border);
+    padding: 6px 10px;
+  }
+  .infra-slot-num {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); width: 20px; flex-shrink: 0;
+  }
+  .infra-slot select {
+    flex: 1; background: transparent; border: none;
+    color: var(--text); font-family: 'Crimson Pro', serif; font-size: 13px;
+    cursor: pointer; outline: none;
+  }
+  .infra-slot select option { background: var(--bg-card); }
+  .infra-slot .infra-owner {
+    display: flex; gap: 4px;
+  }
+  .owner-btn {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid transparent; cursor: pointer;
+    transition: all 0.15s; opacity: 0.3;
+  }
+  .owner-btn.tyranid-btn { background: var(--red-tyranid); }
+  .owner-btn.necron-btn { background: var(--green-necron); }
+  .owner-btn.ultra-btn { background: var(--blue-ultra); }
+  .owner-btn.active { opacity: 1; border-color: white; }
+  .owner-btn.destroyed-btn { background: var(--destroyed); opacity: 0.5; }
+  .owner-btn.destroyed-btn.active { opacity: 1; }
+  .slot-destroyed-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: #555; letter-spacing: 0.1em;
+  }
+
+  /* FLEET TRACKER */
+  .fleet-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .fleet-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .fleet-faction-bar {
+    width: 4px; height: 28px; flex-shrink: 0;
+  }
+  .fleet-title {
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .fleet-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fleet-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-panel); border: 1px solid var(--border);
+    padding: 6px 12px;
+  }
+  .fleet-chip label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.1em; white-space: nowrap;
+  }
+  .fleet-chip select {
+    background: transparent; border: none; color: var(--text);
+    font-family: 'Crimson Pro', serif; font-size: 13px;
+    cursor: pointer; outline: none; min-width: 120px;
+  }
+  .fleet-chip select option { background: var(--bg-card); }
+
+  /* EVENTS LOG */
+  .event-log {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-top: 24px;
+  }
+  .event-log-title {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .event-entries { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+  .event-entry {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    color: var(--text-dim); padding: 6px 10px;
+    background: var(--bg-panel); border-left: 2px solid var(--border-glow);
+  }
+  .event-entry span { color: var(--gold-dim); margin-right: 8px; }
+  .event-input-row { display: flex; gap: 8px; margin-top: 12px; }
+  .event-input {
+    flex: 1; background: var(--bg-panel); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Crimson Pro', serif; font-size: 14px;
+    padding: 8px 12px; outline: none;
+  }
+  .event-input:focus { border-color: var(--border-glow); }
+  .event-add-btn {
+    background: rgba(200,169,74,0.1); border: 1px solid var(--gold-dim);
+    color: var(--gold); font-family: 'Cinzel', serif; font-size: 12px;
+    padding: 8px 16px; cursor: pointer; letter-spacing: 0.08em;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .event-add-btn:hover { background: rgba(200,169,74,0.2); }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  th {
+    font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim);
+    padding: 10px 14px; text-align: left;
+    background: var(--bg-card2); border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px; font-size: 14px; color: var(--text);
+    border-bottom: 1px solid rgba(30,45,66,0.5);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* MEDALS */
+  .medals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .medal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .medal-name {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .medal-condition { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+  .medal-benefit { font-size: 13px; color: var(--accent); }
+
+  /* UTILITY */
+  .rule-box {
+    background: rgba(200,169,74,0.05);
+    border: 1px solid var(--gold-dim);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text);
+  }
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+  .tag {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 2px 8px; border: 1px solid; margin-right: 6px;
+  }
+  .tag-red { border-color: var(--red-dim); color: var(--red-bright); }
+  .tag-green { border-color: var(--green-dim); color: var(--green-bright); }
+  .tag-blue { border-color: var(--blue-dim); color: var(--blue-bright); }
+  .tag-gold { border-color: var(--gold-dim); color: var(--gold); }
+  .inline-note {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    color: var(--text-dim); letter-spacing: 0.05em;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-panel); }
+  ::-webkit-scrollbar-thumb { background: var(--border-glow); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+  /* TOOLTIP */
+  [data-tip] { position: relative; cursor: help; border-bottom: 1px dashed var(--text-dim); }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    background: #000; border: 1px solid var(--border-glow);
+    padding: 6px 10px; font-size: 12px; font-style: normal;
+    color: var(--text); white-space: nowrap; pointer-events: none;
+    opacity: 0; transition: opacity 0.2s; z-index: 999;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+
+  /* ============ ORDERS ============ */
+  .orders-phase-bar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    padding: 14px 20px; margin-bottom: 24px;
+  }
+  .orders-phase-label {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .orders-phase-num {
+    font-family: 'Share Tech Mono', monospace; font-size: 22px;
+    color: var(--gold-bright); margin: 0 10px;
+  }
+  .orders-columns {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  @media(max-width: 900px) { .orders-columns { grid-template-columns: 1fr; } }
+
+  .order-panel {
+    border: 1px solid var(--border); background: var(--bg-card);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .order-panel-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .order-faction-bar { width: 4px; height: 32px; flex-shrink: 0; border-radius: 2px; }
+  .order-faction-name {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .order-faction-player {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.15em; margin-top: 1px;
+  }
+  .order-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+  .order-field { display: flex; flex-direction: column; gap: 5px; }
+  .order-field label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .order-field select, .order-field input[type="text"] {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Crimson Pro', serif; font-size: 14px;
+    padding: 7px 10px; outline: none; width: 100%; transition: border-color 0.2s;
+  }
+  .order-field select:focus, .order-field input:focus { border-color: var(--border-glow); }
+  .order-field select option { background: var(--bg-card); }
+  .order-subfields { display: flex; flex-direction: column; gap: 10px; }
+
+  .order-result-row { display: flex; gap: 8px; margin-top: 2px; }
+  .result-btn {
+    flex: 1; padding: 8px 6px; border: 1px solid;
+    font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; background: transparent;
+    transition: all 0.15s; text-align: center;
+  }
+  .result-btn.win  { border-color: var(--green-dim); color: var(--green-bright); }
+  .result-btn.lose { border-color: var(--red-dim);   color: var(--red-bright); }
+  .result-btn.draw { border-color: var(--gold-dim);  color: var(--gold); }
+  .result-btn.win.selected  { background: rgba(39,174,96,0.2);  border-color: var(--green-bright); }
+  .result-btn.lose.selected { background: rgba(192,57,43,0.2);  border-color: var(--red-bright); }
+  .result-btn.draw.selected { background: rgba(200,169,74,0.2); border-color: var(--gold); }
+
+  .order-commit-btn {
+    margin-top: 4px; width: 100%; padding: 10px;
+    background: rgba(200,169,74,0.08); border: 1px solid var(--gold-dim);
+    color: var(--gold); font-family: 'Cinzel', serif; font-size: 12px;
+    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+  }
+  .order-commit-btn:hover { background: rgba(200,169,74,0.18); border-color: var(--gold); }
+  .order-commit-btn:disabled { opacity: 0.35; cursor: default; }
+  .order-commit-btn.committed { background: rgba(39,174,96,0.12); border-color: var(--green-necron); color: var(--green-bright); }
+
+  .orders-history { margin-top: 28px; }
+  .orders-history-title {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .history-table-wrap { overflow-x: auto; }
+  .history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .history-table th {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--gold-dim); letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 8px 12px; text-align: left;
+    background: var(--bg-card2); border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  .history-table td {
+    padding: 9px 12px; color: var(--text);
+    border-bottom: 1px solid rgba(30,45,66,0.4); vertical-align: top;
+  }
+  .history-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .history-table .h-phase { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--gold-dim); text-align: center; }
+  .history-table .h-faction { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700; }
+  .history-table .h-op { color: var(--text-dim); font-size: 12px; }
+  .history-table .h-detail { color: var(--text); font-size: 12px; }
+  .history-table .h-result { font-family: 'Share Tech Mono', monospace; font-size: 11px; text-align: center; }
+  .h-result.win  { color: var(--green-bright); }
+  .h-result.lose { color: var(--red-bright); }
+  .h-result.draw { color: var(--gold); }
+  .h-result.ok   { color: var(--accent); }
+  .history-clear-btn {
+    background: transparent; border: 1px solid var(--red-dim); color: var(--red-bright);
+    font-family: 'Cinzel', serif; font-size: 11px; padding: 5px 12px; cursor: pointer;
+    letter-spacing: 0.08em; transition: all 0.15s;
+  }
+  .history-clear-btn:hover { background: rgba(192,57,43,0.15); }
+
+  /* ============ MAP VIEW ============ */
+  #mapview {
+    padding: 0 !important;
+    max-width: 100% !important;
+    display: none;
+    flex-direction: column;
+    height: calc(100vh - 50px);
+  }
+  #mapview.active { display: flex; }
+
+  .map-toolbar {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 10px 20px;
+    background: rgba(4,6,10,0.95);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+  .map-toolbar-title {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .map-legend {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+  }
+  .map-legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.1em;
+  }
+  .map-legend-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .map-legend-line {
+    width: 20px; height: 2px; flex-shrink: 0;
+  }
+  .map-zoom-btns {
+    margin-left: auto; display: flex; gap: 6px;
+  }
+  .map-zoom-btn {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--gold); font-size: 16px; width: 30px; height: 30px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; font-family: monospace;
+  }
+  .map-zoom-btn:hover { background: var(--bg-card2); border-color: var(--gold-dim); }
+
+  .map-canvas-wrap {
+    flex: 1; overflow: hidden; position: relative; cursor: grab;
+    background: var(--bg-deep);
+    background-image:
+      radial-gradient(ellipse at 30% 40%, rgba(41,128,185,0.04) 0%, transparent 55%),
+      radial-gradient(ellipse at 70% 60%, rgba(192,57,43,0.03) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 20%, rgba(39,174,96,0.02) 0%, transparent 50%);
+  }
+  .map-canvas-wrap.dragging { cursor: grabbing; }
+
+  #mapSvg {
+    position: absolute; top: 0; left: 0;
+    transform-origin: 0 0;
+    user-select: none;
+  }
+
+  /* SVG planet nodes */
+  .planet-node { cursor: pointer; }
+  .planet-ring {
+    fill: none;
+    stroke-width: 1.5;
+    transition: all 0.2s;
+  }
+  .planet-ring-outer {
+    fill: none;
+    stroke-width: 0.8;
+    opacity: 0.4;
+    animation: rotateRing 20s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @keyframes rotateRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .planet-core { transition: all 0.2s; }
+  .planet-node:hover .planet-ring { stroke-width: 2.5; }
+  .planet-node:hover .planet-core { filter: brightness(1.4); }
+
+  /* Connection lines */
+  .conn-line {
+    stroke: rgba(42,64,96,0.6);
+    stroke-width: 1.2;
+    stroke-dasharray: 5,4;
+    fill: none;
+  }
+  .conn-line.highlighted {
+    stroke: rgba(200,169,74,0.4);
+    stroke-dasharray: none;
+    stroke-width: 1.5;
+  }
+
+  /* Power arcs */
+  .power-arc { fill: none; stroke-width: 5; opacity: 0.85; stroke-linecap: round; }
+
+  /* Fleet markers */
+  .fleet-marker { cursor: default; }
+
+  /* Infra icons */
+  .infra-icon { font-size: 9px; }
+
+  /* Tooltip popup */
+  #mapTooltip {
+    position: fixed;
+    background: rgba(8,12,18,0.97);
+    border: 1px solid var(--border-glow);
+    padding: 14px 18px;
+    min-width: 220px; max-width: 300px;
+    pointer-events: none;
+    z-index: 200;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+  }
+  #mapTooltip.visible { display: block; }
+  .tt-name {
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.08em; margin-bottom: 3px;
+  }
+  .tt-system {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.15em; margin-bottom: 10px;
+  }
+  .tt-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 5px; font-size: 13px;
+  }
+  .tt-label { color: var(--text-dim); font-size: 12px; }
+  .tt-bar {
+    display: flex; gap: 3px;
+  }
+  .tt-pip {
+    width: 16px; height: 10px; border: 1px solid rgba(255,255,255,0.15);
+  }
+  .tt-section {
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-dim);
+  }
+  .tt-section-title {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--gold-dim); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tt-badge {
+    display: inline-block; font-size: 11px;
+    padding: 1px 6px; border: 1px solid var(--border);
+    margin: 2px 2px 0 0; color: var(--text-dim);
+  }
+  /* ============ PWA / MOBILE ============ */
+  /* Safe area insets for iPhone notch/home bar */
+  nav {
+    padding-top: env(safe-area-inset-top);
+  }
+  main {
+    padding-top: calc(50px + env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* Prevent text selection on tap */
+  nav, .nav-tab, .result-btn, .order-commit-btn,
+  .map-zoom-btn, .phase-control button {
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Improve touch targets — minimum 44px */
+  .nav-tab { min-height: 44px; padding: 12px 16px; }
+  .result-btn { min-height: 44px; }
+  .order-commit-btn { min-height: 48px; }
+  .pip { width: 28px; height: 22px; }
+  .phase-control button { min-height: 36px; }
+  /* Mobile-specific layout fixes */
+  @media (max-width: 480px) {
+    .section { padding: 20px 16px; }
+    .hero { padding: 40px 16px 32px; }
+    .hero h1 { font-size: 26px; }
+    .orders-columns { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .planet-grid { grid-template-columns: 1fr; }
+    .ops-grid { grid-template-columns: 1fr; }
+    .infra-grid { grid-template-columns: 1fr; }
+    .theatres-grid { grid-template-columns: 1fr 1fr; }
+    .medals-grid { grid-template-columns: 1fr; }
+    .points-row { flex-direction: column; }
+    nav .nav-brand { display: none; }
+    .phase-control { flex-wrap: wrap; gap: 6px; }
+    .phase-control label { display: none; }
+    #mapview { height: calc(100vh - 50px - env(safe-area-inset-top)); }
+    .map-toolbar { padding: 8px 12px; gap: 8px; }
+    .map-legend { display: none; }
+  }
+  /* PWA install banner */
+  #pwaInstallBanner {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 500;
+    background: #0d1520;
+    border-top: 2px solid var(--gold);
+    padding: 12px 16px 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    flex-direction: column; gap: 8px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+  }
+  #pwaInstallBanner.show { display: flex; }
+  .pwa-banner-row {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .pwa-banner-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--gold); display: flex; align-items: center;
+    justify-content: center; font-size: 22px; flex-shrink: 0;
+  }
+  .pwa-banner-text { flex: 1; }
+  .pwa-banner-title {
+    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.08em;
+  }
+  .pwa-banner-sub {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 0.1em; margin-top: 2px;
+  }
+  .pwa-banner-btns { display: flex; gap: 8px; }
+  .pwa-install-btn {
+    flex: 1; padding: 10px; background: var(--gold);
+    border: none; color: #000; font-family: 'Cinzel', serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; border-radius: 2px;
+  }
+  .pwa-dismiss-btn {
+    padding: 10px 14px; background: transparent;
+    border: 1px solid var(--border); color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    cursor: pointer; border-radius: 2px;
+  }
+  /* iOS install instructions panel */
+  #iosInstallPanel {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 500; background: #0d1520; border-top: 2px solid var(--gold);
+    padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+  }
+  #iosInstallPanel.show { display: block; }
+  .ios-panel-title {
+    font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700;
+    color: var(--gold); margin-bottom: 10px; letter-spacing: 0.08em;
+  }
+  .ios-steps {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;
+  }
+  .ios-step {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text);
+  }
+  .ios-step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--gold); color: #000; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+  .ios-close-btn {
+    width: 100%; padding: 10px; background: transparent;
+    border: 1px solid var(--border); color: var(--text-dim);
+    font-family: 'Cinzel', serif; font-size: 12px; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">VESPATOR FRONT
+    <span id="syncDot" style="
+      display:inline-block; width:7px; height:7px; border-radius:50%;
+      background:#444; margin-left:6px; vertical-align:middle;
+      transition:background 0.4s;" title="Sin Drive configurado"></span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('overview')">Visión General</button>
+    <button class="nav-tab" onclick="showSection('setup')">Preparación</button>
+    <button class="nav-tab" onclick="showSection('phase')">Fase de Campaña</button>
+    <button class="nav-tab" onclick="showSection('operations')">Operaciones</button>
+    <button class="nav-tab" onclick="showSection('infrastructure')">Infraestructura</button>
+    <button class="nav-tab" onclick="showSection('theatres')">Teatros</button>
+    <button class="nav-tab" onclick="showSection('missions')">Misiones</button>
+    <button class="nav-tab" onclick="showSection('events')">Eventos</button>
+    <button class="nav-tab" onclick="showSection('end')">Fin de Campaña</button>
+    <button class="nav-tab" onclick="showSection('tracker')">🗺 Rastreador</button>
+    <button class="nav-tab" onclick="showSection('orders')">📋 Órdenes</button>
+    <button class="nav-tab" onclick="showSection('mapview')">🌌 Mapa</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Warhammer 40.000 — 500 Worlds: Titus</div>
+  <h1>GUERRA EN EL FRENTE VESPATOR</h1>
+  <h2>Guía Completa de Campaña — 3 Jugadores</h2>
+  <div class="faction-badges">
+    <div class="faction-badge tyranid"><div class="faction-dot"></div>TIRÁNIDOS — Alex</div>
+    <div class="faction-badge necron"><div class="faction-dot"></div>NECRONES — Dani</div>
+    <div class="faction-badge ultramarine"><div class="faction-dot"></div>ULTRAMARINES — Pablo</div>
+  </div>
+</div>
+
+<!-- SECTION: OVERVIEW -->
+<section class="section active" id="overview">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title">Visión General de la Campaña</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">¿Qué es el Frente Vespator?</div>
+    <p>La campaña del Frente Vespator es una campaña por mapa en la que tres alianzas luchan por el dominio de un conjunto de sistemas estelares en el cuadrante oriental de los Quinientos Mundos. A lo largo de varias fases, el control de los planetas cambiará de manos, y el resultado de cada batalla alterará de forma permanente el statu quo de este rincón de la galaxia.</p>
+    <p>Cada jugador controla una flota y coordina estrategias interestelares: conquistar o reforzar planetas clave, construir infraestructuras y ganar Puntos de Campaña para alzarse como el Señor de la Guerra victorioso.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Estructura General</div>
+      <p><strong>Duración recomendada:</strong> 6 Fases de Campaña (≈1 mes por fase).</p>
+      <p><strong>Partidas por jugador:</strong> Aproximadamente 2 partidas por fase.</p>
+      <p><strong>Victoria:</strong> La alianza con más Puntos de Campaña al final de la última fase gana.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Puntos de Campaña</div>
+      <p>Al final de cada fase, el Señor de la Guerra calcula los puntos de cada alianza:</p>
+      <p>🔢 <strong>Total de Niveles de Poder</strong> en todos los planetas, más</p>
+      <p>⭐ <strong>+3 puntos</strong> si la Fortaleza de la alianza no ha sido destruida.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Los Tres Jugadores y su Territorio Inicial</div>
+    <p>Según el mapa marcado, los despliegues iniciales son los siguientes. Los <span class="tag tag-red">TIRÁNIDOS</span> de Alex parten con influencia extendida por el centro y sur del mapa; los <span class="tag tag-green">NECRONES</span> de Dani tienen presencia fuerte en múltiples sistemas dispersos; y los <span class="tag tag-blue">ULTRAMARINES</span> de Pablo dominan varios planetas del norte y este del mapa.</p>
+    <p>Usa la pestaña <strong>🗺 Rastreador</strong> para registrar todos los cambios durante la campaña.</p>
+  </div>
+
+  <div class="rule-box">
+    💡 <strong>Rol del Señor de la Guerra:</strong> Se recomienda nombrar a un jugador Señor de la Guerra (Warmaster), que actuará como árbitro y administrador: actualizará el mapa, comunicará resultados y gestionará los Eventos del Frente Vespator.
+  </div>
+</section>
+
+<!-- SECTION: SETUP -->
+<section class="section" id="setup">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title">Preparación de la Campaña</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Sigue esta secuencia una sola vez, al inicio de la campaña, para configurar el mapa y los despliegues.</p>
+
+  <div class="phase-list">
+    <div class="phase-step">
+      <div class="phase-step-num">1</div>
+      <div class="phase-step-content">
+        <h4>Nombrar Señor de la Guerra y decidir Flotas</h4>
+        <p>Con 3 alianzas de 1 jugador cada una, <strong>cada alianza tiene 1 Flota</strong>. Se recomienda al menos 1 flota por jugador. El Señor de la Guerra se encarga de gestionar el mapa y comunicar resultados.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">2</div>
+      <div class="phase-step-content">
+        <h4>Determinar Duración</h4>
+        <p>El grupo decide el número de Fases de Campaña. <strong>Se recomiendan 6 fases.</strong> Pueden ajustarse según disponibilidad.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">3</div>
+      <div class="phase-step-content">
+        <h4>Cada Alianza decide en secreto su Fortaleza y Niveles de Poder iniciales</h4>
+        <p>Cada alianza elige en secreto: <strong>1 planeta</strong> para construir su Fortaleza (Nivel de Poder comienza en 4) · <strong>3 planetas</strong> adicionales en Nivel de Poder 3 · <strong>4 planetas</strong> adicionales en Nivel de Poder 2. El resto de planetas comienza en Nivel de Poder 1. Estos despliegues ya están marcados en el mapa de la campaña de Alex, Dani y Pablo.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">4</div>
+      <div class="phase-step-content">
+        <h4>Cada Alianza elige 3 Infraestructuras iniciales</h4>
+        <p>En secreto, cada alianza selecciona <strong>3 piezas de infraestructura</strong> (excluidas Fortalezas) para construir en los planetas que deseen. Luego se revelan y se actualiza el mapa. Si hay conflictos de espacio, el Señor de la Guerra resuelve con tirada de dados.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">5</div>
+      <div class="phase-step-content">
+        <h4>Cada Alianza decide posición inicial de sus Flotas</h4>
+        <p>En secreto, cada alianza elige <strong>1 planeta de inicio</strong> para su Flota. Luego se revela todo y se actualiza el mapa de campaña.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="card">
+    <div class="card-title">Niveles de Poder — Reglas Generales</div>
+    <p>El Nivel de Poder de cada alianza en un planeta oscila normalmente entre <strong>1 y 4</strong>. Un nivel más alto otorga ventajas en batallas y resultados de campaña. Niveles más altos también hacen más difícil que el enemigo debilite tu control.</p>
+    <p>El Nivel de Poder <strong>nunca puede bajar de 0 ni subir de 4</strong>, salvo que una regla específica lo indique. Si cae a 0 porque el planeta es destruido, la alianza no puede usar ese planeta para operaciones de campaña.</p>
+  </div>
+</section>
+
+<!-- SECTION: PHASE -->
+<section class="section" id="phase">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title">La Fase de Campaña</div>
+  </div>
+
+  <p style="margin-bottom:24px; color:var(--text-dim);">Cada Fase de Campaña se desarrolla siguiendo estos pasos en orden. Al completar todos los pasos, comienza la siguiente Fase.</p>
+
+  <div class="phase-list">
+    <div class="phase-step">
+      <div class="phase-step-num">①</div>
+      <div class="phase-step-content">
+        <h4>Paso 1 — Seleccionar Operaciones</h4>
+        <p>Cada jugador elige en secreto <strong>1 Operación de Campaña</strong> para cada una de sus Flotas. Se informa al Señor de la Guerra de las decisiones (usando el Formulario de Órdenes). Algunas operaciones requieren información adicional (planeta objetivo, alianza atacada, etc.). Si un jugador no entrega sus órdenes en el plazo acordado, su Flota realiza automáticamente la <em>Operación Auxilia Logística</em>.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">②</div>
+      <div class="phase-step-content">
+        <h4>Paso 2 — Ejecutar Operaciones (sub-pasos 2.1 a 2.6)</h4>
+        <p>El Señor de la Guerra gestiona la resolución de todas las operaciones declaradas en este orden:</p>
+        <p><strong>2.1 Revelar Operaciones</strong> — El Señor de la Guerra revela a todos las operaciones de cada alianza y notifica a cada alianza los ataques que ha recibido.</p>
+        <p><strong>2.2 Edificios Completos</strong> — Se construyen las infraestructuras de las Flotas que eligieron "Levantar Edificios". Se empieza por la alianza con mayor Nivel de Poder en ese planeta.</p>
+        <p><strong>2.3 Resolver Operaciones de Batalla</strong> — Los jugadores se enfrentan en partidas de Warhammer 40.000 para resolver todas las Operaciones de Batalla declaradas. El jugador atacante informa el resultado al Señor de la Guerra. Si una Operación de Batalla no se juega antes del plazo, el atacante se considera victorioso.</p>
+        <p><strong>2.4 Procesar Resultados de Batalla</strong> — El Señor de la Guerra actualiza el mapa en orden cronológico según los resultados de las partidas. Los Resultados de Campaña se aplican según el tipo de ataque usado.</p>
+        <p><strong>2.5 Llegada de Flotas</strong> — Las Flotas que eligieron "Salto al Vacío" se mueven al planeta seleccionado.</p>
+        <p><strong>2.6 Resistencia de Bajo Nivel</strong> — Se resuelven las Flotas que eligieron "Desplegar Equipos de Eliminación". Salvo que el planeta esté destruido, por cada alianza enemiga se lanza 1D6: con un 5+ se reduce su Nivel de Poder en ese planeta en 1.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">③</div>
+      <div class="phase-step-content">
+        <h4>Paso 3 — Resultados y Eventos del Frente Vespator</h4>
+        <p>El Señor de la Guerra calcula los <strong>Puntos de Campaña actuales</strong> de cada alianza (total de Niveles de Poder + 3 si la Fortaleza está intacta) y actualiza el Rastreador de Puntos. Después genera los Eventos del Frente Vespator correspondientes (ver sección Eventos).</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">④</div>
+      <div class="phase-step-content">
+        <h4>Paso 4 — Mover Flotas</h4>
+        <p>Cada jugador puede mover cada una de sus Flotas a <strong>1 planeta conectado</strong> al planeta actual. Se informa al Señor de la Guerra, que actualiza el mapa. Nota: si una alianza tiene una <strong>Instalación de Apoyo</strong>, los planetas a distancia 2 se consideran conectados.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">⑤</div>
+      <div class="phase-step-content">
+        <h4>Paso 5 — Construir Infraestructura</h4>
+        <p>En orden de mayor a menor Nivel de Poder total, cada alianza puede construir <strong>1 pieza de infraestructura</strong> (cualquier tipo excepto Fortaleza) en un planeta donde tenga una Flota o en uno conectado a ese planeta.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule-box">
+    🔁 <strong>Si esta es la última Fase de Campaña</strong>, tras el Paso 3, el Señor de la Guerra determina al vencedor y entrega las Medallas de Campaña. No se realizan los Pasos 4 y 5.
+  </div>
+</section>
+
+<!-- SECTION: OPERATIONS -->
+<section class="section" id="operations">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title">Operaciones de Campaña</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Cada turno, cada jugador elige una de las siguientes operaciones para su Flota. La más común es la Operación de Batalla.</p>
+
+  <div class="ops-grid">
+    <div class="op-card">
+      <div class="op-card-tag battle">Batalla</div>
+      <h4>Operación de Batalla</h4>
+      <p>Declara un tipo de ataque (ver abajo), un planeta objetivo (el tuyo o uno conectado) y una alianza enemiga. Se juega una partida de Warhammer 40.000 con resultados de campaña específicos según el tipo de ataque.</p>
+    </div>
+    <div class="op-card">
+      <div class="op-card-tag move">Movimiento</div>
+      <h4>Salto al Vacío</h4>
+      <p>La Flota efectúa un viaje interestelar de largo alcance. Selecciona <strong>cualquier planeta del mapa</strong>: la Flota se moverá allí en el sub-paso 2.5, independientemente de la distancia.</p>
+    </div>
+    <div class="op-card">
+      <div class="op-card-tag build">Construcción</div>
+      <h4>Levantar Edificios</h4>
+      <p>Elige una infraestructura de entre estas opciones: <strong>Línea de Fortificación, Instalación de Apoyo o Zona de Despliegue</strong>. Se construye en el planeta de la Flota en el sub-paso 2.2.</p>
+    </div>
+    <div class="op-card">
+      <div class="op-card-tag special">Apoyo</div>
+      <h4>Auxilia Logística</h4>
+      <p>La Flota realiza misiones de exploración y apoyo. Hasta el final de esta Fase, cuando tu alianza sea atacada en este planeta o en uno conectado, <strong>puedes elegir tú el Teatro</strong> en lugar del atacante.</p>
+    </div>
+    <div class="op-card">
+      <div class="op-card-tag special">Guerrilla</div>
+      <h4>Desplegar Equipos de Eliminación</h4>
+      <p>Selecciona este planeta o uno conectado. En el sub-paso 2.6, por cada alianza enemiga, el Señor de la Guerra lanza 1D6: con <strong>5+, reduce su Nivel de Poder en 1</strong> en ese planeta.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:16px;">
+    <div class="section-number" style="font-size:10px;">4.1</div>
+    <div class="section-title" style="font-size:16px;">Tipos de Ataque de Batalla</div>
+  </div>
+
+  <p style="margin-bottom:16px; color:var(--text-dim); font-size:14px;">Al elegir la Operación de Batalla, debes especificar uno de estos tipos de ataque. Cada uno tiene una misión específica y diferentes resultados de campaña.</p>
+
+  <div class="attack-list">
+    <div class="attack-item">
+      <h5>⚡ Capturar Base de Poder</h5>
+      <p>Intenta apoderarte de las infraestructuras enemigas en el planeta objetivo o destruirlas para construir las tuyas. Ventajoso si quieres hacerte con las instalaciones del rival.</p>
+    </div>
+    <div class="attack-item">
+      <h5>🔥 Purgar y Quemar</h5>
+      <p>Reduce el Nivel de Poder enemigo eliminando fuerzas y bloqueando su expansión. Especialmente eficaz si tu Nivel de Poder es <em>más alto</em> que el del defensor.</p>
+    </div>
+    <div class="attack-item">
+      <h5>🚀 Invasión Orbital</h5>
+      <p>Establece una cabeza de playa y refuerza posiciones para reducir el Nivel de Poder del defensor. Especialmente eficaz si tu Nivel de Poder es <em>más bajo</em> que el del defensor.</p>
+    </div>
+    <div class="attack-item">
+      <h5>💥 Bombardeo Planetario</h5>
+      <p>Debilita las protecciones del defensor y destruye Localizaciones de Infraestructura. Puede destruir el planeta si se agotan todas las localizaciones.</p>
+    </div>
+    <div class="attack-item">
+      <h5>🏴‍☠️ Asalto a Base de Suministros</h5>
+      <p>Sabotaje en instalaciones clave (astilleros, centros de tránsito). Reduce el Nivel de Poder del defensor en este planeta o en planetas conectados.</p>
+    </div>
+    <div class="attack-item">
+      <h5>🛸 Abordaje</h5>
+      <p>Ataca a la Flota enemiga en órbita. Si vences, puedes mover la Flota rival hasta 2 veces. Requiere jugar una misión de Boarding Actions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: INFRASTRUCTURE -->
+<section class="section" id="infrastructure">
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <div class="section-title">Infraestructuras</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Las infraestructuras son construcciones estratégicas que mejoran las capacidades militares de cada alianza. Cada planeta tiene un número limitado de Localizaciones de Infraestructura disponibles.</p>
+
+  <div class="rule-box">
+    ⚠️ Si todas las Localizaciones de Infraestructura de un planeta son destruidas, el planeta queda <strong>inhabitado</strong>: todos los Niveles de Poder se reducen a 0 y no puede ser objetivo de Operaciones de Campaña.
+  </div>
+
+  <div class="infra-grid">
+    <div class="infra-card">
+      <div class="infra-type" style="color:var(--gold);">★ FORTALEZA</div>
+      <div class="infra-max">Máx: 1</div>
+      <div class="infra-name">Stronghold</div>
+      <div class="infra-effect">Cuando un jugador de tu alianza gana una batalla en este planeta o en uno conectado, puede tratar tu Nivel de Poder como 1 mayor o menor para los Resultados de Campaña. Mientras esté intacta, añade +3 a los Puntos de Campaña de la alianza.</div>
+    </div>
+    <div class="infra-card">
+      <div class="infra-type" style="color:var(--accent);">▲ INSTALACIÓN</div>
+      <div class="infra-max">Máx: 3</div>
+      <div class="infra-name">Instalación de Apoyo</div>
+      <div class="infra-effect">Los planetas a distancia 2 de este planeta se consideran conectados (solo en una dirección). Permite mover flotas más lejos y expandir el radio de operaciones.</div>
+    </div>
+    <div class="infra-card">
+      <div class="infra-type" style="color:var(--green-necron);">◆ ZONA</div>
+      <div class="infra-max">Máx: 3</div>
+      <div class="infra-name">Zona de Despliegue</div>
+      <div class="infra-effect">Cuando tu alianza lucha en este planeta o en uno conectado, puedes tratar tu Nivel de Poder como 1 mayor o menor para las Reglas de Misión. El efecto de múltiples Zonas de Despliegue no se acumula.</div>
+    </div>
+    <div class="infra-card">
+      <div class="infra-type" style="color:var(--red-bright);">■ LÍNEA</div>
+      <div class="infra-max">Máx: 5</div>
+      <div class="infra-name">Línea de Fortificación</div>
+      <div class="infra-effect">El Nivel de Poder mínimo de tu alianza en este planeta aumenta en 1. Si una regla reduciría tu Nivel de Poder por debajo de ese mínimo, se destruye una de tus Líneas de Fortificación en su lugar.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="card">
+    <div class="card-title">Reglas Generales de Construcción</div>
+    <p>Un planeta sin Localizaciones libres no puede recibir más infraestructura. Si una Localización está destruida, ya no puede albergar nuevas construcciones. Si una alianza ya tiene el máximo permitido de un tipo, no puede construir más de ese tipo hasta que una sea capturada o destruida.</p>
+    <p>Cuando se construye una infraestructura, se coloca el adhesivo correspondiente en una Localización libre del planeta relevante.</p>
+  </div>
+</section>
+
+<!-- SECTION: THEATRES -->
+<section class="section" id="theatres">
+  <div class="section-header">
+    <div class="section-number">06</div>
+    <div class="section-title">Teatros de los Quinientos Mundos</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Al jugar una batalla (excepto Abordaje), el <strong>atacante</strong> elige uno de los Teatros disponibles en ese planeta y lanza 1D6 para determinar el Giro (Twist) que aplica. Si se juega la Auxilia Logística, es el <strong>defensor</strong> quien elige el Teatro.</p>
+
+  <div class="theatres-grid">
+    <div class="theatre-card">
+      <div class="theatre-icon">🏚</div>
+      <div class="theatre-name">Yermos Desolados</div>
+      <div class="theatre-desc">Extensas llanuras abiertas, polvo y ruinas dispersas. Favorece unidades de infantería y montadas.</div>
+      <div class="theatre-twists">⬡ Suelo Abierto: Re-tira avances y cargas (sin monstruos/vehículos).<br>⬡ Combatientes Expuestos: Armas de distancia obtienen [ASALTO].</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">🌿</div>
+      <div class="theatre-name">Jungla Xenoflora</div>
+      <div class="theatre-desc">Vegetación alienígena densa. Favorece ejércitos de cuerpo a cuerpo.</div>
+      <div class="theatre-twists">⬡ Esporas Carniceras: +1 Fuerza en armas de combate.<br>⬡ Flora Depredadora: Pruebas de Huida Desesperada al Retroceder.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">☢</div>
+      <div class="theatre-name">Zona de Radiación</div>
+      <div class="theatre-desc">Cenizas irradiadas. Reduce la letalidad y mejora la durabilidad. Estilo atricional.</div>
+      <div class="theatre-twists">⬡ Tormenta de Ceniza Tóxica: Límites de rango en rondas 2/3/4.<br>⬡ Interferencia Esotérica: Sin PC extra salvo los del inicio de fase.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">⚙</div>
+      <div class="theatre-name">Complejo de Forja</div>
+      <div class="theatre-desc">Instalaciones industriales activas. Favorece unidades resistentes y duras.</div>
+      <div class="theatre-twists">⬡ Corrosión Termal: +1 Penetración de Armadura a menos de 9".<br>⬡ Combustibles Volátiles: +1 a ataques de armas de Ráfaga.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">🏗</div>
+      <div class="theatre-name">Barriada Urbana</div>
+      <div class="theatre-desc">Bloques de habitáculos y ruinas densas. Favorece infantería en terreno.</div>
+      <div class="theatre-twists">⬡ Humos Voraces: Sigilo mientras estés en terreno de área.<br>⬡ Hacia las Profundidades: Reposicionamiento subterráneo a Reservas Estratégicas.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">🚀</div>
+      <div class="theatre-name">Puerto Espacial</div>
+      <div class="theatre-desc">Infraestructura de comunicación y despliegue. Facilita maniobra y control de objetivos.</div>
+      <div class="theatre-twists">⬡ Bloqueo de Coordenadas: Los marcadores controlados aguantan hasta superar tu dominio.<br>⬡ Santuarios de Embarque: Reubicar unidades a Reservas Estratégicas.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">🏜</div>
+      <div class="theatre-name">Tierras Muertas</div>
+      <div class="theatre-desc">Desiertos baldíos. Favorece monstruos y vehículos pesados.</div>
+      <div class="theatre-twists">⬡ Expansión Desolada: +3" de Movimiento a Monstruos y Vehículos.<br>⬡ Manto de Polvo: Sigilo tras Avanzar para Monstruos/Vehículos.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">⛏</div>
+      <div class="theatre-name">Instalación de Extracción</div>
+      <div class="theatre-desc">Minas activas y maquinaria. Favorece ataques contra unidades resistentes.</div>
+      <div class="theatre-twists">⬡ Cargas Santificadas: Trampas en marcadores de zona neutral.<br>⬡ Sacudida Tectónica: [GOLPES LETALES] cerca de marcadores en zona neutral.</div>
+    </div>
+    <div class="theatre-card">
+      <div class="theatre-icon">🪦</div>
+      <div class="theatre-name">Complejo de Tumbas</div>
+      <div class="theatre-desc">Arquitectura Necrón emergiendo. Resultados impredecibles. Variado e interesante.</div>
+      <div class="theatre-twists">⬡ Compresión Espacio-Tiempo: +2 a todas las tiradas de Avance.<br>⬡ Blindaje Cuántico: Salvación invulnerable 5+ contra ataques a distancia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: MISSIONS -->
+<section class="section" id="missions">
+  <div class="section-header">
+    <div class="section-number">07</div>
+    <div class="section-title">Misiones de Campaña</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Cada tipo de ataque tiene una misión asociada. Los jugadores también pueden usar misiones de otras publicaciones de Warhammer 40.000, aplicando igualmente los Resultados de Campaña del tipo de ataque declarado.</p>
+
+  <div class="card">
+    <div class="card-title">Secuencia de Partida</div>
+    <p>1. Leer la misión → 2. Elegir tamaño de batalla (Incursión / Fuerza de Ataque / Asalto) → 3. Preparar ejércitos → 4. Colocar marcadores → 5. Determinar Teatro y Giro → 6. Crear el campo de batalla → 7. Determinar Atacante/Defensor → 8. Declarar Formaciones → 9. Desplegar ejércitos → 10. Reubicar unidades → 11. Determinar turno → 12. Resolver reglas pre-batalla → 13. ¡Luchar! → 14. Determinar victorioso → 15. Resolver Resultado de Campaña</p>
+  </div>
+
+  <div class="section-header" style="margin-top:24px; margin-bottom:16px;">
+    <div class="section-number" style="font-size:10px;">7.1</div>
+    <div class="section-title" style="font-size:16px;">Resultados de Campaña por Tipo de Ataque</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo de Ataque</th>
+        <th>Victoria Atacante</th>
+        <th>Victoria Defensor</th>
+        <th>Empate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Capturar Base de Poder</strong></td>
+        <td>Roba 1 infraestructura enemiga (construye la misma en su lugar) · Si NP atacante ≥3, construye 1 infra extra · +1 NP atacante</td>
+        <td>Construye 1 Línea de Fortif. (o 1 Zona Desp. si NP def. ≥3) · +1 NP defensor</td>
+        <td>+1 NP atacante</td>
+      </tr>
+      <tr>
+        <td><strong>Purgar y Quemar</strong></td>
+        <td>Si NP atac ≥ NP def: -1 NP defensor en este planeta · +1 NP atacante</td>
+        <td>Defensor puede reducir su NP aquí múltiples veces para añadir a planetas conectados · +1 NP defensor en planeta conectado</td>
+        <td>+1 NP atacante</td>
+      </tr>
+      <tr>
+        <td><strong>Invasión Orbital</strong></td>
+        <td>Si NP atac &lt; NP def: -1 NP defensor · +1 NP atacante</td>
+        <td>Mueve infraestructura entre este planeta y uno conectado (a elección) · +1 NP defensor</td>
+        <td>+1 NP atacante</td>
+      </tr>
+      <tr>
+        <td><strong>Bombardeo Planetario</strong></td>
+        <td>Tira D6 (con +1 si NP ≥3): en 3+ destruye una Localización de Infra · +1 NP atacante</td>
+        <td>Tira D6 en planeta conectado: destruye infra o Localización · +1 NP defensor</td>
+        <td>+1 NP atacante</td>
+      </tr>
+      <tr>
+        <td><strong>Asalto a Base de Suministros</strong></td>
+        <td>Tira D6 en planeta elegido (o conectado): 4+ -1 NP defensor. Si NP ≥3, repite · +1 NP atacante</td>
+        <td>-1 NP atacante (o en conectado si NP def ≥3) · +1 NP defensor</td>
+        <td>+1 NP atacante</td>
+      </tr>
+      <tr>
+        <td><strong>Abordaje</strong></td>
+        <td>Mueve la Flota enemiga hasta 2 veces · +1 NP atacante</td>
+        <td>La Flota atacante no puede moverse este turno · Defensor mueve 1 Flota 1 vez · +1 NP defensor</td>
+        <td>+1 NP atacante</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="inline-note">NP = Nivel de Poder · Infra = Infraestructura · Fortif. = Fortificación · Desp. = Despliegue</p>
+</section>
+
+<!-- SECTION: EVENTS -->
+<section class="section" id="events">
+  <div class="section-header">
+    <div class="section-number">08</div>
+    <div class="section-title">Eventos del Frente Vespator</div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text-dim);">Al final del Paso 3 de cada Fase (Resultados y Eventos), el Señor de la Guerra verifica si se activan eventos especiales. El orden de verificación es siempre el mismo:</p>
+
+  <div class="phase-list">
+    <div class="phase-step">
+      <div class="phase-step-num">A</div>
+      <div class="phase-step-content">
+        <h4>¿Hay una alianza Dominante? (más de 5 puntos por delante de todas)</h4>
+        <p>Si es así: lanza 1D6. Con 4+, genera un <strong>Evento de Peligros del Poder</strong> (tira 1D3 en la tabla). Esto perjudica a la alianza dominante o beneficia a las demás.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">B</div>
+      <div class="phase-step-content">
+        <h4>¿Hay una alianza Rezagada? (más de 5 puntos por detrás de todas)</h4>
+        <p>Si es así: lanza 1D6. Con 4+, genera un <strong>Evento de Medidas Desesperadas</strong> (tira 1D3 en la tabla). Esto beneficia a la alianza rezagada.</p>
+      </div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step-num">C</div>
+      <div class="phase-step-content">
+        <h4>¿Evento de Fortunas de Guerra?</h4>
+        <p>Lanza 1D6 (con +1 si es la fase 4 o posterior). Con 4+, genera un <strong>Evento de Fortunas de Guerra</strong> (tira 1D33 en la tabla). Puede afectar a todas las alianzas de diversas formas.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="two-col">
+    <div>
+      <div class="section-header" style="margin-bottom:12px;">
+        <div class="section-number" style="font-size:9px;">8.1</div>
+        <div class="section-title" style="font-size:13px;">Peligros del Poder (D3)</div>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title" style="font-size:12px;">1 — Levantamientos de Culto</div>
+        <p style="font-size:13px;">El Señor de la Guerra elige un planeta clave de la alianza dominante. Por cada infraestructura: tira D6 (3-5 = destruida; 6 = infraestructura Y localización destruidas). Por cada NP de la alianza dominante: tira D6 (-1 si hay Flota allí), con 4+ pierde 1 NP.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title" style="font-size:12px;">2 — Oposición Coordinada</div>
+        <p style="font-size:13px;">En la siguiente fase, cuando cualquier jugador luche contra la alianza dominante, puede tratar su NP como 1 mayor o menor para Reglas de Misión y Resultados de Campaña.</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="font-size:12px;">3 — Libro Abierto</div>
+        <p style="font-size:13px;">En la siguiente fase, durante la selección de operaciones, la alianza dominante debe declarar todas sus operaciones y revelarlas ANTES de que las otras alianzas declaren las suyas.</p>
+      </div>
+    </div>
+    <div>
+      <div class="section-header" style="margin-bottom:12px;">
+        <div class="section-number" style="font-size:9px;">8.2</div>
+        <div class="section-title" style="font-size:13px;">Medidas Desesperadas (D3)</div>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title" style="font-size:12px;">1 — Pacto Costoso</div>
+        <p style="font-size:13px;">La alianza rezagada elige 1 planeta (sin Fortalezas enemigas) y 1 alianza enemiga. Ambas alianzas intercambian su NP en ese planeta.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="card-title" style="font-size:12px;">2 — Celo Desafiante</div>
+        <p style="font-size:13px;">En la siguiente fase, cada Flota de la alianza rezagada puede declarar <strong>una Operación adicional</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="font-size:12px;">3 — Activos de Contrabando</div>
+        <p style="font-size:13px;">Por cada infraestructura en el mapa, la alianza rezagada puede retirarla y reconstruirla en otro planeta. Además, construye 1 infraestructura extra (sin Fortaleza) en cualquier planeta.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="card">
+    <div class="card-title">Fortunas de Guerra — Tabla D33 (selección)</div>
+    <table style="margin-top:10px;">
+      <thead><tr><th>Resultado</th><th>Evento</th><th>Efecto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>11</strong></td><td>Calma en los Combates</td><td>En orden de puntos, cada alianza puede construir 1 infra y mover cada Flota a un planeta conectado.</td></tr>
+        <tr><td><strong>12</strong></td><td>Piratería Espacial</td><td>En la siguiente fase: sin Saltos al Vacío, las Instalaciones de Apoyo no funcionan.</td></tr>
+        <tr><td><strong>13</strong></td><td>Mareas de Guerra</td><td>Cada alianza (con Fortaleza intacta) puede retirar y reconstruir su Fortaleza en otro planeta.</td></tr>
+        <tr><td><strong>21</strong></td><td>Presagios Siniestros</td><td>Siguiente fase: sin Auxilia Logística; los Teatros se eligen aleatoriamente al atacar.</td></tr>
+        <tr><td><strong>22</strong></td><td>Riquezas Arqueotecnológicas</td><td>Los 3 planetas con menor NP total reciben reliquias; quien gane más batallas allí obtiene hasta +3 NP en esos planetas o conectados.</td></tr>
+        <tr><td><strong>23</strong></td><td>Hambruna y Enfermedad</td><td>Todas las alianzas pierden 1 NP en <em>cada</em> planeta.</td></tr>
+        <tr><td><strong>31</strong></td><td>Migración de Xenobestias</td><td>Todas las Flotas se reubican en nuevos planetas (diferentes al actual y no conectados).</td></tr>
+        <tr><td><strong>32</strong></td><td>Maquinaciones del Destino</td><td>Jugadores pueden desertar a otra alianza. El Señor de la Guerra redistribuye Flotas según deseos declarados.</td></tr>
+        <tr><td><strong>33</strong></td><td>Tormentas Estelares</td><td>(Solo 1 vez por campaña.) D6 por cada planeta con 1 sola localización: 4+ la destruye, pudiendo destruir el planeta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION: END -->
+<section class="section" id="end">
+  <div class="section-header">
+    <div class="section-number">09</div>
+    <div class="section-title">Fin de la Campaña y Medallas</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Determinar el Vencedor</div>
+    <p>Gana la alianza con <strong>más Puntos de Campaña</strong> al final de la última fase. En caso de empate: si solo uno de los empatados tiene la Fortaleza intacta, ese gana. Si hay más de un empate, se juega una batalla final entre representantes de cada alianza empatada.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section-header" style="margin-bottom:16px;">
+    <div class="section-number" style="font-size:10px;">9.1</div>
+    <div class="section-title" style="font-size:16px;">Medallas de Campaña</div>
+  </div>
+
+  <p style="margin-bottom:16px; color:var(--text-dim); font-size:14px;">Las medallas otorgan beneficios al comienzo de la siguiente campaña. El Señor de la Guerra determina qué alianza tiene más jugadores con cada medalla; esa alianza recibe el beneficio correspondiente.</p>
+
+  <div class="medals-grid">
+    <div class="medal-card">
+      <div class="medal-name">🏆 Laurel de Victoria</div>
+      <div class="medal-condition">Para: La alianza victoriosa.</div>
+      <div class="medal-benefit">Beneficio: Elige 1 planeta para tu Fortaleza al comienzo. Otros no pueden tener infra allí ni más de NP 1, ni iniciar Flotas allí.</div>
+    </div>
+    <div class="medal-card">
+      <div class="medal-name">🌑 Corona de Penumbra</div>
+      <div class="medal-condition">Para: Alianza con NP 1 en más planetas.</div>
+      <div class="medal-benefit">Beneficio: Al configurar, elige 2 planetas y súbeles +2 NP.</div>
+    </div>
+    <div class="medal-card">
+      <div class="medal-name">⭐ Estrella del Navegante</div>
+      <div class="medal-condition">Para: Alianza con mayor distancia entre sus Instalaciones de Apoyo.</div>
+      <div class="medal-benefit">Beneficio: En la primera fase, cada Flota puede moverse hasta 2 veces.</div>
+    </div>
+    <div class="medal-card">
+      <div class="medal-name">🗡 Daga Sable</div>
+      <div class="medal-condition">Para: Alianza con mayor distancia entre sus Flotas.</div>
+      <div class="medal-benefit">Beneficio: Al configurar, intercambia NP entre 2 planetas elegidos hasta 3 veces.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: TRACKER -->
+<section class="section" id="tracker">
+  <div class="section-header">
+    <div class="section-number">★</div>
+    <div class="section-title">Rastreador de Campaña</div>
+  </div>
+
+  <!-- INTRO BAR -->
+  <div class="intro-bar">
+    <span>FRENTE VESPATOR · ESTADO ACTUAL</span>
+    <div class="phase-control">
+      <label>FASE:</label>
+      <input type="number" id="phaseNum" value="1" min="1" max="6">
+      <button onclick="nextPhase()">SIGUIENTE FASE ▶</button>
+      <button onclick="exportState()" style="background:rgba(41,128,185,0.1);border:1px solid var(--blue-dim);color:var(--blue-bright);">⬇ Exportar</button>
+      <button onclick="document.getElementById('importFile').click()" style="background:rgba(39,174,96,0.1);border:1px solid var(--green-dim);color:var(--green-bright);">⬆ Importar</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importState(event)">
+      <button onclick="resetCampaign()" style="background:rgba(192,57,43,0.1);border:1px solid var(--red-dim);color:var(--red-bright);">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- DRIVE SYNC BAR -->
+  <div id="driveSyncBar" style="
+    display:flex; align-items:center; flex-wrap:wrap; gap:10px;
+    background:var(--bg-card); border:1px solid var(--border);
+    border-top: 2px solid #1a73e8;
+    padding:12px 20px; margin-bottom:20px;">
+    <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#4da3ff;letter-spacing:0.2em;text-transform:uppercase;flex-shrink:0;">
+      ☁ AUTO-SYNC DRIVE
+    </span>
+    <div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:200px;">
+      <label style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.15em;">
+        URL DEL SCRIPT — pégala una sola vez, se recuerda siempre
+      </label>
+      <input type="text" id="driveScriptUrl"
+        placeholder="https://script.google.com/macros/s/XXXXX/exec"
+        style="background:var(--bg-panel);border:1px solid var(--border);color:var(--text);
+               font-family:'Share Tech Mono',monospace;font-size:11px;padding:6px 10px;
+               outline:none;width:100%;"
+        onchange="saveDriveUrl(); autoLoadFromDrive();">
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0;align-items:center;">
+      <span id="driveSyncStatus" style="
+        font-family:'Share Tech Mono',monospace;font-size:10px;
+        color:var(--text-dim);letter-spacing:0.1em;">
+        Sin configurar
+      </span>
+      <button onclick="driveSave()" title="Guardar ahora en Drive" style="
+        background:rgba(26,115,232,0.12);border:1px solid #1a4a8a;
+        color:#4da3ff;font-family:'Share Tech Mono',monospace;font-size:10px;
+        letter-spacing:0.1em;padding:7px 12px;cursor:pointer;">
+        ☁↑ Guardar
+      </button>
+      <button onclick="driveLoad()" title="Forzar carga desde Drive" style="
+        background:rgba(26,115,232,0.06);border:1px solid #1a3060;
+        color:#4da3ff;font-family:'Share Tech Mono',monospace;font-size:10px;
+        letter-spacing:0.1em;padding:7px 12px;cursor:pointer;">
+        ☁↓ Cargar
+      </button>
+    </div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:#3a5570;letter-spacing:0.08em;width:100%;margin-top:2px;">
+      Los cambios se guardan automáticamente en Drive. Al abrir la app se carga el estado más reciente.
+    </div>
+  </div>
+
+  <!-- POINTS TRACKER -->
+  <div class="points-bar-wrapper">
+    <div class="points-bar-title">⬛ RASTREADOR DE PUNTOS</div>
+    <div class="points-row">
+      <div class="points-faction">
+        <div class="points-faction-label">
+          <span class="points-faction-name tyranid-color" style="font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;">🔴 TIRÁNIDOS — Alex</span>
+          <span class="points-value tyranid-color" id="pts-tyranid">0</span>
+        </div>
+        <div class="points-bar-bg"><div class="points-bar-fill tyranid-bg" id="bar-tyranid" style="width:0%"></div></div>
+      </div>
+      <div class="points-faction">
+        <div class="points-faction-label">
+          <span class="points-faction-name necron-color" style="font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;">🟢 NECRONES — Dani</span>
+          <span class="points-value necron-color" id="pts-necron">0</span>
+        </div>
+        <div class="points-bar-bg"><div class="points-bar-fill necron-bg" id="bar-necron" style="width:0%"></div></div>
+      </div>
+      <div class="points-faction">
+        <div class="points-faction-label">
+          <span class="points-faction-name ultra-color" style="font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;">🔵 ULTRAMARINES — Pablo</span>
+          <span class="points-value ultra-color" id="pts-ultra">0</span>
+        </div>
+        <div class="points-bar-bg"><div class="points-bar-fill ultra-bg" id="bar-ultra" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRONGHOLD TRACKERS -->
+  <div style="display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+    <div class="infra-card" style="flex:1;min-width:180px;">
+      <div class="infra-type tyranid-color">TIRÁNIDOS</div>
+      <div class="infra-name" style="font-size:13px;">Fortaleza intacta</div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);">
+        <input type="checkbox" id="stronghold-tyranid" checked onchange="recalcPoints()"> +3 pts activos
+      </label>
+    </div>
+    <div class="infra-card" style="flex:1;min-width:180px;">
+      <div class="infra-type necron-color">NECRONES</div>
+      <div class="infra-name" style="font-size:13px;">Fortaleza intacta</div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);">
+        <input type="checkbox" id="stronghold-necron" checked onchange="recalcPoints()"> +3 pts activos
+      </label>
+    </div>
+    <div class="infra-card" style="flex:1;min-width:180px;">
+      <div class="infra-type ultra-color">ULTRAMARINES</div>
+      <div class="infra-name" style="font-size:13px;">Fortaleza intacta</div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);">
+        <input type="checkbox" id="stronghold-ultra" checked onchange="recalcPoints()"> +3 pts activos
+      </label>
+    </div>
+  </div>
+
+  <!-- FLEET TRACKER -->
+  <div class="fleet-section">
+    <div class="fleet-header">
+      <div class="fleet-faction-bar" style="background:var(--red-tyranid)"></div>
+      <div class="fleet-title tyranid-color">Flotas — Tiránidos (Alex)</div>
+    </div>
+    <div class="fleet-grid">
+      <div class="fleet-chip">
+        <label>FLOTA A</label>
+        <select id="fleet-tyranid-a" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <optgroup label="Sistema Osymanden">
+            <option>Felgris Secundas</option>
+          </optgroup>
+          <optgroup label="Sistema Kasphos">
+            <option>Masnet</option>
+          </optgroup>
+          <optgroup label="Sistema Reiya">
+            <option>Tarkad Vindix</option>
+          </optgroup>
+          <optgroup label="Sistema Esvar">
+            <option>Jawardet</option>
+          </optgroup>
+          <optgroup label="Sistema Zur Mortalis">
+            <option>Kryndaer</option>
+          </optgroup>
+          <optgroup label="Sistema Heliodras">
+            <option>Novamagnor</option>
+          </optgroup>
+          <optgroup label="Sistema Orphon">
+            <option>Astarthem</option>
+          </optgroup>
+          <optgroup label="Sistema Salem">
+            <option>Karabas</option>
+          </optgroup>
+          <optgroup label="Sistema Gorund">
+            <option>Norallus</option>
+          </optgroup>
+          <optgroup label="Sistema Vespator">
+            <option>Caltus Novem</option>
+          </optgroup>
+          <optgroup label="Sistema Diodecis">
+            <option>Marvinius</option>
+          </optgroup>
+          <optgroup label="Sistema Vikulum">
+            <option>Vikus Decima</option>
+          </optgroup>
+          <optgroup label="Sistema Ixaron">
+            <option>Ikaron Prime</option>
+          </optgroup>
+          <optgroup label="Órbita">
+            <option>En órbita / tránsito</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="fleet-section">
+    <div class="fleet-header">
+      <div class="fleet-faction-bar" style="background:var(--green-necron)"></div>
+      <div class="fleet-title necron-color">Flotas — Necrones (Dani)</div>
+    </div>
+    <div class="fleet-grid">
+      <div class="fleet-chip">
+        <label>FLOTA A</label>
+        <select id="fleet-necron-a" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="fleet-section">
+    <div class="fleet-header">
+      <div class="fleet-faction-bar" style="background:var(--blue-ultra)"></div>
+      <div class="fleet-title ultra-color">Flotas — Ultramarines (Pablo)</div>
+    </div>
+    <div class="fleet-grid">
+      <div class="fleet-chip">
+        <label>FLOTA A</label>
+        <select id="fleet-ultra-a" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PLANET GRID -->
+  <div class="section-header" style="margin-bottom:20px;">
+    <div class="section-number" style="font-size:10px;">★</div>
+    <div class="section-title" style="font-size:16px;">Estado de los Planetas</div>
+  </div>
+  <p style="margin-bottom:20px; color:var(--text-dim); font-size:14px;">Haz clic en los círculos de Nivel de Poder para ajustar el valor. Usa los menús de infraestructura para registrar qué hay construido y quién lo posee. Los datos se guardan automáticamente en tu navegador.</p>
+
+  <div class="planet-grid" id="planetGrid"></div>
+
+  <!-- EVENT LOG -->
+  <div class="event-log">
+    <div class="event-log-title">📋 Registro de Eventos de Campaña</div>
+    <div class="event-entries" id="eventEntries">
+      <div class="event-entry"><span>[INICIO]</span> Campaña iniciada. ¡Que comience la guerra por el Frente Vespator!</div>
+    </div>
+    <div class="event-input-row">
+      <input type="text" class="event-input" id="eventInput" placeholder="Registra un resultado, evento o nota importante…" onkeydown="if(event.key==='Enter')addEvent()">
+      <button class="event-add-btn" onclick="addEvent()">+ Añadir</button>
+    </div>
+  </div>
+</section>
+<!-- SECTION: MAP VIEW -->
+<section class="section" id="mapview">
+  <div class="map-toolbar">
+    <span class="map-toolbar-title">🌌 Mapa del Frente Vespator</span>
+    <div class="map-legend">
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#e74c3c"></div>Tiránidos (Alex)</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#2ecc71"></div>Necrones (Dani)</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#3498db"></div>Ultramarines (Pablo)</div>
+      <div class="map-legend-item"><div class="map-legend-line" style="background:rgba(200,169,74,0.5);"></div>Conexión</div>
+      <div class="map-legend-item"><span style="color:var(--gold-dim);font-size:12px;">★</span>&nbsp;Fortaleza&nbsp;
+        <span style="color:#e74c3c;font-size:10px;">▲</span>&nbsp;Inst. Apoyo&nbsp;
+        <span style="color:#2ecc71;font-size:10px;">◆</span>&nbsp;Zona Desp.&nbsp;
+        <span style="color:#e74c3c;font-size:10px;">■</span>&nbsp;Línea Fort.</div>
+      <div class="map-legend-item">
+        <svg width="28" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#e74c3c" stroke-width="2"/><text x="16" y="11" fill="#aaa" font-size="9" font-family="monospace">Flota</text></svg>
+      </div>
+    </div>
+    <div class="map-zoom-btns">
+      <button class="map-zoom-btn" onclick="mapZoom(1.25)" title="Acercar">+</button>
+      <button class="map-zoom-btn" onclick="mapZoom(0.8)" title="Alejar">−</button>
+      <button class="map-zoom-btn" onclick="mapReset()" title="Recentrar" style="font-size:12px;">⌂</button>
+    </div>
+  </div>
+  <div class="map-canvas-wrap" id="mapWrap">
+    <svg id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <div id="mapTooltip"></div>
+</section>
+
+<!-- SECTION: ORDERS -->
+<section class="section" id="orders">
+  <div class="section-header">
+    <div class="section-number">★</div>
+    <div class="section-title">Registro de Órdenes</div>
+  </div>
+
+  <div class="orders-phase-bar">
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span class="orders-phase-label">Fase Actual:</span>
+      <span class="orders-phase-num" id="orders-phase-display">1</span>
+    </div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);">
+      Registra la operación de cada jugador. Al confirmar, el rastreador se actualiza automáticamente.
+    </div>
+  </div>
+
+  <div class="orders-columns" id="ordersColumns"></div>
+
+  <div class="orders-history">
+    <div class="orders-history-title">
+      <span>Historial de Órdenes</span>
+      <button class="history-clear-btn" onclick="clearOrderHistory()">✕ Limpiar historial</button>
+    </div>
+    <div class="history-table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>Jugador</th>
+            <th>Operación</th>
+            <th>Detalle</th>
+            <th>Resultado</th>
+          </tr>
+        </thead>
+        <tbody id="orderHistoryBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ===================== DATA =====================
+const PLANETS = [
+  {
+    id: 'norallus', name: 'Norallus', system: 'Sistema Gorund',
+    theatres: ['Delvesite Facility', 'Hab Sprawl', 'Rad Zone'],
+    infraSlots: 3,
+    initial: { tyranid: 1, necron: 1, ultra: 4 }
+  },
+  {
+    id: 'masnet', name: 'Masnet', system: 'Sistema Kasphos',
+    theatres: ['Spaceport', 'Hab Sprawl', 'Dead Lands'],
+    infraSlots: 2,
+    initial: { tyranid: 2, necron: 1, ultra: 3 }
+  },
+  {
+    id: 'felgris', name: 'Felgris Secundas', system: 'Sistema Osymanden',
+    theatres: ['Xenoflora Jungle', 'Forge Complex'],
+    infraSlots: 3,
+    initial: { tyranid: 2, necron: 2, ultra: 2 }
+  },
+  {
+    id: 'tarkad', name: 'Tarkad Vindix', system: 'Sistema Reiya',
+    theatres: ['Desolate Wastes', 'Rad Zone'],
+    infraSlots: 3,
+    initial: { tyranid: 3, necron: 3, ultra: 1 }
+  },
+  {
+    id: 'jawardet', name: 'Jawardet', system: 'Sistema Esvar',
+    theatres: ['Hab Sprawl', 'Dead Lands', 'Tomb Complex'],
+    infraSlots: 2,
+    initial: { tyranid: 3, necron: 2, ultra: 1 }
+  },
+  {
+    id: 'astarthem', name: 'Astarthem', system: 'Sistema Orphon',
+    theatres: ['Forge Complex', 'Dead Lands'],
+    infraSlots: 4,
+    initial: { tyranid: 4, necron: 3, ultra: 1 }
+  },
+  {
+    id: 'novamagnor', name: 'Novamagnor', system: 'Sistema Heliodras',
+    theatres: ['Spaceport', 'Tomb Complex'],
+    infraSlots: 2,
+    initial: { tyranid: 3, necron: 4, ultra: 1 }
+  },
+  {
+    id: 'kryndaer', name: 'Kryndaer', system: 'Sistema Zur Mortalis',
+    theatres: ['Delvesite Facility', 'Xenoflora Jungle', 'Tomb Complex'],
+    infraSlots: 2,
+    initial: { tyranid: 1, necron: 2, ultra: 3 }
+  },
+  {
+    id: 'karabas', name: 'Karabas', system: 'Sistema Salem',
+    theatres: ['Delvesite Facility', 'Forge Complex'],
+    infraSlots: 4,
+    initial: { tyranid: 1, necron: 1, ultra: 3 }
+  },
+  {
+    id: 'caltus', name: 'Caltus Novem', system: 'Sistema Vespator',
+    theatres: ['Xenoflora Jungle', 'Forge Complex', 'Dead Lands'],
+    infraSlots: 3,
+    initial: { tyranid: 2, necron: 2, ultra: 2 }
+  },
+  {
+    id: 'marvinius', name: 'Marvinius', system: 'Sistema Diodecis',
+    theatres: ['Hab Sprawl', 'Rad Zone'],
+    infraSlots: 3,
+    initial: { tyranid: 1, necron: 1, ultra: 2 }
+  },
+  {
+    id: 'vikus', name: 'Vikus Decima', system: 'Sistema Vikulum',
+    theatres: ['Spaceport', 'Desolate Wastes'],
+    infraSlots: 2,
+    initial: { tyranid: 1, necron: 1, ultra: 1 }
+  },
+  {
+    id: 'ikaron', name: 'Ikaron Prime', system: 'Sistema Ixaron',
+    theatres: ['Delvesite Facility', 'Hab Sprawl', 'Tomb Complex'],
+    infraSlots: 3,
+    initial: { tyranid: 2, necron: 3, ultra: 2 }
+  }
+];
+
+const THEATRE_NAMES = {
+  'Desolate Wastes': 'Yermos Desolados',
+  'Xenoflora Jungle': 'Jungla Xenoflora',
+  'Rad Zone': 'Zona de Radiación',
+  'Forge Complex': 'Complejo de Forja',
+  'Hab Sprawl': 'Barriada Urbana',
+  'Spaceport': 'Puerto Espacial',
+  'Dead Lands': 'Tierras Muertas',
+  'Delvesite Facility': 'Instalación de Extracción',
+  'Tomb Complex': 'Complejo de Tumbas'
+};
+
+const INFRA_OPTIONS = [
+  { value: '', label: '— Libre —' },
+  { value: 'stronghold', label: '★ Fortaleza' },
+  { value: 'support', label: '▲ Instalación de Apoyo' },
+  { value: 'staging', label: '◆ Zona de Despliegue' },
+  { value: 'fortification', label: '■ Línea de Fortificación' },
+  { value: 'destroyed-slot', label: '✕ Localización Destruida' },
+];
+
+// State
+let state = {};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('vespator_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Version check: if no version or old version, reinitialise from scratch
+      if (!parsed.version || parsed.version < 3) {
+        initState();
+        return;
+      }
+      state = parsed;
+    } else {
+      initState();
+    }
+  } catch(e) { initState(); }
+}
+
+// ===================== DRIVE SYNC — AUTO =====================
+const DRIVE_URL_KEY      = 'vespator_drive_url';
+const DRIVE_LAST_SAVE_KEY = 'vespator_last_drive_save';
+
+// Debounce: auto-save fires 4s after the last change, max once every 10s
+let autoSaveTimer = null;
+let autoSaveInProgress = false;
+let driveAvailable = false;   // true once URL is confirmed working
+
+function saveDriveUrl() {
+  const url = document.getElementById('driveScriptUrl')?.value?.trim();
+  if (url) {
+    localStorage.setItem(DRIVE_URL_KEY, url);
+    driveAvailable = true;
+  }
+}
+
+function loadDriveUrl() {
+  const url = localStorage.getItem(DRIVE_URL_KEY) || '';
+  const el = document.getElementById('driveScriptUrl');
+  if (el && url) el.value = url;
+  if (url) driveAvailable = true;
+  return url;
+}
+
+function getDriveUrl() {
+  const el = document.getElementById('driveScriptUrl');
+  return (el?.value?.trim()) || localStorage.getItem(DRIVE_URL_KEY) || '';
+}
+
+function setDriveStatus(msg, color, spin) {
+  const el = document.getElementById('driveSyncStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.color = color || 'var(--text-dim)';
+  // Pulse animation on sync activity
+  el.style.opacity = spin ? '0.7' : '1';
+}
+
+// ── Debounced auto-save: called after every state change ──
+function scheduleAutoSave() {
+  if (!driveAvailable) return;
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => autoSaveToDrive(), 4000);
+}
+
+async function autoSaveToDrive() {
+  if (autoSaveInProgress) return;
+  const url = getDriveUrl();
+  if (!url) return;
+  autoSaveInProgress = true;
+  setDriveStatus('⏳ Sincronizando…', '#f39c12', true);
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(state),
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      const ts = new Date(data.savedAt).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+      localStorage.setItem(DRIVE_LAST_SAVE_KEY, data.savedAt);
+      setDriveStatus(`☁ Guardado ${ts}`, '#2ecc71');
+      updateSyncDot('ok');
+    } else {
+      setDriveStatus('⚠ Error al guardar', '#e74c3c');
+      updateSyncDot('error');
+    }
+  } catch(e) {
+    setDriveStatus('⚠ Sin conexión', '#f39c12');
+    updateSyncDot('offline');
+  } finally {
+    autoSaveInProgress = false;
+  }
+}
+
+// ── Auto-load on app open: silently load from Drive if URL set ──
+async function autoLoadFromDrive() {
+  const url = getDriveUrl();
+  if (!url) return;
+  setDriveStatus('⏳ Cargando desde Drive…', '#f39c12', true);
+  updateSyncDot('syncing');
+  try {
+    const resp = await fetch(url + '?t=' + Date.now());
+    const data = await resp.json();
+    if (!data.planets || !data.phase) {
+      // Drive file empty or uninitialised — push our local state
+      setDriveStatus('☁ Conectado (primer uso)', '#2ecc71');
+      updateSyncDot('ok');
+      scheduleAutoSave();
+      return;
+    }
+
+    // Compare timestamps: load Drive state only if newer than local
+    const driveTime  = new Date(data.savedAt || 0).getTime();
+    const localSaved = new Date(localStorage.getItem(DRIVE_LAST_SAVE_KEY) || 0).getTime();
+
+    if (driveTime > localSaved) {
+      data.version = 3;
+      state = data;
+      try { localStorage.setItem('vespator_state', JSON.stringify(state)); } catch(err) {}
+      localStorage.setItem(DRIVE_LAST_SAVE_KEY, data.savedAt || new Date().toISOString());
+      renderPlanets();
+      restoreUIFromState();
+      recalcPoints();
+      renderOrderHistory();
+      if (document.getElementById('mapview')?.classList.contains('active')) renderMap();
+      const ts = new Date(driveTime).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+      setDriveStatus(`☁ Sincronizado ${ts}`, '#2ecc71');
+      showSyncToast('✔ Estado actualizado desde Drive');
+    } else {
+      setDriveStatus('☁ Conectado', '#2ecc71');
+    }
+    updateSyncDot('ok');
+    driveAvailable = true;
+  } catch(e) {
+    setDriveStatus('⚠ Sin conexión a Drive', '#f39c12');
+    updateSyncDot('offline');
+  }
+}
+
+// ── Manual buttons (kept for emergencies) ──
+async function driveSave() {
+  if (autoSaveTimer) { clearTimeout(autoSaveTimer); autoSaveTimer = null; }
+  await autoSaveToDrive();
+}
+
+async function driveLoad() {
+  const url = getDriveUrl();
+  if (!url) { setDriveStatus('⚠ Pega primero la URL del script', '#f39c12'); return; }
+  if (!confirm('¿Forzar carga desde Drive? Se sobreescribirá el estado local.')) return;
+  localStorage.removeItem(DRIVE_LAST_SAVE_KEY); // force load regardless of timestamp
+  await autoLoadFromDrive();
+}
+
+// ── Sync dot indicator in nav ──
+function updateSyncDot(status) {
+  const dot = document.getElementById('syncDot');
+  if (!dot) return;
+  const colors = { ok: '#2ecc71', error: '#e74c3c', offline: '#f39c12', syncing: '#3498db' };
+  dot.style.background = colors[status] || '#666';
+  dot.title = { ok: 'Drive sincronizado', error: 'Error de sincronización',
+    offline: 'Sin conexión', syncing: 'Sincronizando…' }[status] || '';
+}
+
+// ── Toast notification ──
+function showSyncToast(msg) {
+  let toast = document.getElementById('syncToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'syncToast';
+    toast.style.cssText = `
+      position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+      background:#0d1520; border:1px solid #2ecc71; color:#2ecc71;
+      font-family:'Share Tech Mono',monospace; font-size:12px;
+      padding:10px 20px; z-index:600; border-radius:2px;
+      letter-spacing:0.1em; opacity:0; transition:opacity 0.3s;
+      pointer-events:none; white-space:nowrap;`;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+}
+
+// ── Visibility change: reload when app comes to foreground ──
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && driveAvailable) {
+    autoLoadFromDrive();
+  }
+});
+
+// ===================== EXPORT / IMPORT =====================
+function exportState() {
+  // Make sure latest UI values are in state before exporting
+  saveState();
+
+  const phase = state.phase || 1;
+  const date  = new Date().toISOString().slice(0, 10);
+  const filename = `vespator_fase${phase}_${date}.json`;
+
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  addEventEntry(`[Exportar] Estado de campaña exportado — Fase ${phase} — ${date}`);
+}
+
+function importState(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+
+      // Basic validation
+      if (!imported.planets || !imported.phase) {
+        alert('El archivo no parece un guardado válido de la campaña.');
+        return;
+      }
+
+      if (!confirm(`¿Cargar el guardado "${file.name}"? Se sobreescribirá el estado actual.`)) return;
+
+      // Force version so it won't be discarded on next load
+      imported.version = 3;
+      state = imported;
+
+      try { localStorage.setItem('vespator_state', JSON.stringify(state)); } catch(err) {}
+
+      // Re-render everything
+      renderPlanets();
+      restoreUIFromState();
+      recalcPoints();
+      renderOrderHistory();
+      if (document.getElementById('mapview')?.classList.contains('active')) renderMap();
+
+      addEventEntry(`[Importar] Estado cargado desde "${file.name}" — Fase ${state.phase}`);
+      alert(`✅ Campaña cargada correctamente desde "${file.name}"`);
+
+    } catch(err) {
+      alert('Error al leer el archivo. Asegúrate de que es un JSON válido exportado desde esta aplicación.');
+    }
+    // Reset file input so the same file can be re-imported if needed
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function resetCampaign() {
+  if (!confirm('¿Reiniciar toda la campaña al estado inicial?')) return;
+  localStorage.removeItem('vespator_state');
+  state = {};
+  initState();
+}
+
+function initState() {
+  // Build fresh state from PLANETS initial values
+  state = {
+    version: 3,
+    phase: 1,
+    events: [],
+    orderHistory: [],
+    planets: {},
+    fleets: {},
+    strongholds: { tyranid: true, necron: true, ultra: true }
+  };
+  PLANETS.forEach(p => {
+    state.planets[p.id] = {
+      destroyed: false,
+      power: { tyranid: p.initial.tyranid, necron: p.initial.necron, ultra: p.initial.ultra },
+      infra: Array.from({ length: p.infraSlots }, () => ({ type: '', owner: '' }))
+    };
+  });
+  // Starting Strongholds: placed on the planet where each faction starts at NP 4
+  state.planets['astarthem'].infra[0]  = { type: 'stronghold', owner: 'tyranid' }; // Alex
+  state.planets['novamagnor'].infra[0] = { type: 'stronghold', owner: 'necron' };  // Dani
+  state.planets['norallus'].infra[0]   = { type: 'stronghold', owner: 'ultra' };   // Pablo
+
+  // Persist and re-render everything
+  try { localStorage.setItem('vespator_state', JSON.stringify(state)); } catch(e) {}
+  renderPlanets();
+  restoreUIFromState();
+  recalcPoints();
+  renderOrderHistory();
+  if (document.getElementById('mapview')?.classList.contains('active')) renderMap();
+}
+
+function saveState() {
+  // Collect current UI state
+  const phase = parseInt(document.getElementById('phaseNum')?.value || 1);
+  if (!isNaN(phase)) state.phase = phase;
+
+  // Strongholds
+  ['tyranid','necron','ultra'].forEach(f => {
+    const el = document.getElementById('stronghold-' + f);
+    if (el) state.strongholds[f] = el.checked;
+  });
+
+  // Fleets
+  ['tyranid-a','necron-a','ultra-a'].forEach(k => {
+    const el = document.getElementById('fleet-' + k);
+    if (el) state.fleets[k] = el.value;
+  });
+
+  try { localStorage.setItem('vespator_state', JSON.stringify(state)); } catch(e) {}
+  recalcPoints();
+  // Refresh map if it's currently visible
+  if (document.getElementById('mapview')?.classList.contains('active')) renderMap();
+  // Schedule auto-save to Drive
+  scheduleAutoSave();
+}
+
+// ===================== RENDER =====================
+function renderPlanets() {
+  const grid = document.getElementById('planetGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  PLANETS.forEach(p => renderPlanet(p, grid));
+}
+
+function renderPlanet(p, grid) {
+  const ps = state.planets[p.id];
+  const card = document.createElement('div');
+  card.className = 'planet-card' + (ps.destroyed ? ' destroyed' : '');
+  card.id = 'pcard-' + p.id;
+
+  const theatreHtml = p.theatres.map(t =>
+    `<span class="theatre-tag">${THEATRE_NAMES[t] || t}</span>`
+  ).join('');
+
+  const infraHtml = ps.infra.map((slot, i) => {
+    const opts = INFRA_OPTIONS.map(o =>
+      `<option value="${o.value}" ${slot.type === o.value ? 'selected' : ''}>${o.label}</option>`
+    ).join('');
+    const ownerBtns = ['tyranid','necron','ultra'].map(f =>
+      `<button class="owner-btn ${f}-btn ${slot.owner === f ? 'active' : ''}" onclick="setInfraOwner('${p.id}',${i},'${f}')" title="${f}"></button>`
+    ).join('') +
+    `<button class="owner-btn destroyed-btn ${slot.owner === 'destroyed' ? 'active' : ''}" onclick="setInfraOwner('${p.id}',${i},'destroyed')" title="Destruida">✕</button>`;
+
+    return `
+    <div class="infra-slot" id="islot-${p.id}-${i}">
+      <span class="infra-slot-num">${i+1}</span>
+      <select onchange="setInfraType('${p.id}',${i},this.value)">${opts}</select>
+      <div class="infra-owner">${ownerBtns}</div>
+    </div>`;
+  }).join('');
+
+  const makePips = (faction, cls) => {
+    const cur = ps.power[faction];
+    return [1,2,3,4].map(v =>
+      `<div class="pip ${cls} ${cur >= v ? 'active' : ''}" onclick="setPower('${p.id}','${faction}',${v})">${v}</div>`
+    ).join('');
+  };
+
+  card.innerHTML = `
+    <div class="planet-header">
+      <div>
+        <div class="planet-name">${p.name}</div>
+        <div class="planet-system">${p.system}</div>
+      </div>
+      <button class="planet-status-btn ${ps.destroyed ? 'destroyed-state' : 'ok'}" onclick="toggleDestroyed('${p.id}')">
+        ${ps.destroyed ? 'DESTRUIDO' : 'ACTIVO'}
+      </button>
+    </div>
+    <div class="planet-body">
+      <div class="power-section">
+        <div class="power-label">NIVELES DE PODER</div>
+        <div class="power-rows">
+          <div class="power-row">
+            <div class="power-faction-dot" style="background:var(--red-bright)"></div>
+            <div class="power-faction-name">Alex (Tyr.)</div>
+            <div class="power-pips">${makePips('tyranid','tyranid-pip')}</div>
+            <div class="power-num tyranid-color">${ps.power.tyranid}</div>
+          </div>
+          <div class="power-row">
+            <div class="power-faction-dot" style="background:var(--green-bright)"></div>
+            <div class="power-faction-name">Dani (Nec.)</div>
+            <div class="power-pips">${makePips('necron','necron-pip')}</div>
+            <div class="power-num necron-color">${ps.power.necron}</div>
+          </div>
+          <div class="power-row">
+            <div class="power-faction-dot" style="background:var(--blue-bright)"></div>
+            <div class="power-faction-name">Pablo (Ult.)</div>
+            <div class="power-pips">${makePips('ultra','ultra-pip')}</div>
+            <div class="power-num ultra-color">${ps.power.ultra}</div>
+          </div>
+        </div>
+      </div>
+      <div class="theatres-section">
+        <div class="theatres-label">TEATROS</div>
+        <div class="theatre-tags">${theatreHtml}</div>
+      </div>
+      <div class="infra-section">
+        <div class="infra-label">INFRAESTRUCTURA (${p.infraSlots} slots)</div>
+        <div class="infra-slots">${infraHtml}</div>
+      </div>
+    </div>`;
+  grid.appendChild(card);
+}
+
+// ===================== INTERACTIONS =====================
+function setPower(planetId, faction, value) {
+  const ps = state.planets[planetId];
+  if (ps.destroyed) return;
+  const cur = ps.power[faction];
+  // If clicking current value and it's > 1, it stays; clicking below sets to that value
+  ps.power[faction] = (cur === value && value > 1) ? value - 1 : value;
+  if (ps.power[faction] < 1) ps.power[faction] = 1;
+  if (ps.power[faction] > 4) ps.power[faction] = 4;
+  saveState();
+  // Re-render just this planet card
+  const card = document.getElementById('pcard-' + planetId);
+  const planet = PLANETS.find(p => p.id === planetId);
+  if (card && planet) {
+    const newCard = document.createElement('div');
+    const grid = document.getElementById('planetGrid');
+    renderPlanet(planet, newCard);
+    const newEl = newCard.firstChild;
+    if (newEl) grid.replaceChild(newEl, card);
+  }
+}
+
+function setInfraType(planetId, idx, value) {
+  state.planets[planetId].infra[idx].type = value;
+  if (value === '') state.planets[planetId].infra[idx].owner = '';
+  saveState();
+}
+
+function setInfraOwner(planetId, idx, owner) {
+  const slot = state.planets[planetId].infra[idx];
+  slot.owner = slot.owner === owner ? '' : owner;
+  saveState();
+  // Update buttons
+  ['tyranid','necron','ultra','destroyed'].forEach(f => {
+    const btn = document.querySelector(`#islot-${planetId}-${idx} .${f}-btn`);
+    if (btn) btn.classList.toggle('active', slot.owner === f);
+  });
+}
+
+function toggleDestroyed(planetId) {
+  const ps = state.planets[planetId];
+  ps.destroyed = !ps.destroyed;
+  if (ps.destroyed) {
+    ps.power.tyranid = 0; ps.power.necron = 0; ps.power.ultra = 0;
+  }
+  saveState();
+  const card = document.getElementById('pcard-' + planetId);
+  const planet = PLANETS.find(p => p.id === planetId);
+  if (card && planet) {
+    const grid = document.getElementById('planetGrid');
+    const newCard = document.createElement('div');
+    renderPlanet(planet, newCard);
+    const newEl = newCard.firstChild;
+    if (newEl) grid.replaceChild(newEl, card);
+  }
+}
+
+function recalcPoints() {
+  let pts = { tyranid: 0, necron: 0, ultra: 0 };
+  PLANETS.forEach(p => {
+    const ps = state.planets[p.id];
+    if (!ps) return;
+    pts.tyranid += ps.power.tyranid || 0;
+    pts.necron += ps.power.necron || 0;
+    pts.ultra += ps.power.ultra || 0;
+  });
+
+  const strongholds = {
+    tyranid: document.getElementById('stronghold-tyranid')?.checked,
+    necron: document.getElementById('stronghold-necron')?.checked,
+    ultra: document.getElementById('stronghold-ultra')?.checked,
+  };
+  if (strongholds.tyranid) pts.tyranid += 3;
+  if (strongholds.necron) pts.necron += 3;
+  if (strongholds.ultra) pts.ultra += 3;
+
+  const maxPts = Math.max(pts.tyranid, pts.necron, pts.ultra, 1);
+
+  ['tyranid','necron','ultra'].forEach(f => {
+    const el = document.getElementById('pts-' + f);
+    const bar = document.getElementById('bar-' + f);
+    if (el) el.textContent = pts[f];
+    if (bar) bar.style.width = Math.round((pts[f] / maxPts) * 100) + '%';
+  });
+}
+
+function nextPhase() {
+  const inp = document.getElementById('phaseNum');
+  if (inp) {
+    const cur = parseInt(inp.value) || 1;
+    inp.value = Math.min(cur + 1, 6);
+    addEventEntry(`[FASE ${inp.value}] Nueva fase de campaña iniciada.`);
+    saveState();
+    resetOrdersForNewPhase();
+  }
+}
+
+function addEvent() {
+  const inp = document.getElementById('eventInput');
+  if (!inp || !inp.value.trim()) return;
+  addEventEntry(inp.value.trim());
+  inp.value = '';
+}
+
+function addEventEntry(text) {
+  if (!state.events) state.events = [];
+  const phase = document.getElementById('phaseNum')?.value || 1;
+  const entry = { phase, text, time: new Date().toLocaleString('es-ES') };
+  state.events.unshift(entry);
+  renderEvents();
+  saveState();
+}
+
+function renderEvents() {
+  const container = document.getElementById('eventEntries');
+  if (!container) return;
+  const events = state.events || [];
+  container.innerHTML = events.slice(0, 40).map(e =>
+    `<div class="event-entry"><span>[Fase ${e.phase}]</span>${e.text}</div>`
+  ).join('') || '<div class="event-entry"><span>[INICIO]</span> Campaña iniciada.</div>';
+}
+
+function restoreUIFromState() {
+  const phaseEl = document.getElementById('phaseNum');
+  if (phaseEl && state.phase) phaseEl.value = state.phase;
+
+  ['tyranid','necron','ultra'].forEach(f => {
+    const el = document.getElementById('stronghold-' + f);
+    if (el && state.strongholds) el.checked = state.strongholds[f] !== false;
+  });
+
+  ['tyranid-a','necron-a','ultra-a'].forEach(k => {
+    const el = document.getElementById('fleet-' + k);
+    if (el && state.fleets && state.fleets[k]) el.value = state.fleets[k];
+  });
+
+  renderEvents();
+}
+
+// ===================== NAVIGATION =====================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const section = document.getElementById(id);
+  if (section) section.classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(t => {
+    if (t.getAttribute('onclick')?.includes(id)) t.classList.add('active');
+  });
+  if (id === 'tracker') recalcPoints();
+  if (id === 'mapview') { setTimeout(() => { renderMap(); mapReset(); }, 50); }
+  if (id === 'orders')  { renderOrdersPanel(); renderOrderHistory(); }
+}
+
+// ===================== ORDERS ENGINE =====================
+
+const FACTIONS_ORDER = [
+  { id: 'tyranid', name: 'Tiránidos', player: 'Alex',  color: '#e74c3c', barColor: '#c0392b' },
+  { id: 'necron',  name: 'Necrones',  player: 'Dani',  color: '#2ecc71', barColor: '#27ae60' },
+  { id: 'ultra',   name: 'Ultramarines', player: 'Pablo', color: '#3498db', barColor: '#2980b9' },
+];
+
+const OPERATIONS = [
+  { value: 'battle',      label: '⚔ Operación de Batalla' },
+  { value: 'void_leap',   label: '🚀 Salto al Vacío' },
+  { value: 'build',       label: '🔨 Levantar Edificios' },
+  { value: 'logistics',   label: '🛡 Auxilia Logística' },
+  { value: 'elimination', label: '🗡 Desplegar Equipos de Eliminación' },
+];
+
+const ATTACK_TYPES = [
+  { value: 'capture',  label: 'Capturar Base de Poder' },
+  { value: 'purge',    label: 'Purgar y Quemar' },
+  { value: 'invasion', label: 'Invasión Orbital' },
+  { value: 'bombard',  label: 'Bombardeo Planetario' },
+  { value: 'raid',     label: 'Asalto a Base de Suministros' },
+  { value: 'boarding', label: 'Abordaje' },
+];
+
+const INFRA_BUILD_OPTIONS = [
+  { value: 'fortification', label: '■ Línea de Fortificación' },
+  { value: 'support',       label: '▲ Instalación de Apoyo' },
+  { value: 'staging',       label: '◆ Zona de Despliegue' },
+];
+
+// Per-faction pending order state (not persisted between sessions — cleared per phase)
+let pendingOrders = { tyranid: {}, necron: {}, ultra: {} };
+let orderResults = { tyranid: null, necron: null, ultra: null };
+
+function getPlanetOptions(includeEmpty = true) {
+  let opts = includeEmpty ? '<option value="">— Seleccionar planeta —</option>' : '';
+  PLANETS.forEach(p => {
+    opts += `<option value="${p.id}">${p.name}</option>`;
+  });
+  return opts;
+}
+
+function getFactionEnemyOptions(selfFac) {
+  return FACTIONS_ORDER
+    .filter(f => f.id !== selfFac)
+    .map(f => `<option value="${f.id}">${f.name} (${f.player})</option>`)
+    .join('');
+}
+
+function buildOrderPanel(fac) {
+  const f = FACTIONS_ORDER.find(x => x.id === fac);
+  const pending = pendingOrders[fac];
+  const op = pending.operation || '';
+  const committed = pending.committed || false;
+
+  // Fleet location label
+  const fleetPlanetId = state.fleets?.[fac + '-a'];
+  const fleetPlanet = fleetPlanetId ? PLANETS.find(p => p.name === fleetPlanetId) : null;
+  const fleetLabel = fleetPlanet
+    ? `<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">Flota en: <span style="color:${f.color}">${fleetPlanet.name}</span></span>`
+    : `<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">Flota: sin asignar</span>`;
+
+  // Build operation-specific subfields
+  let subfields = '';
+  if (op === 'battle') {
+    subfields = `
+      <div class="order-subfields">
+        <div class="order-field">
+          <label>Tipo de Ataque</label>
+          <select onchange="setOrderField('${fac}','attackType',this.value)">
+            <option value="">— Tipo de ataque —</option>
+            ${ATTACK_TYPES.map(a => `<option value="${a.value}" ${pending.attackType===a.value?'selected':''}>${a.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="order-field">
+          <label>Planeta Objetivo</label>
+          <select onchange="setOrderField('${fac}','targetPlanet',this.value)">
+            ${getPlanetOptions()}
+            ${PLANETS.map(p => `<option value="${p.id}" ${pending.targetPlanet===p.id?'selected':''}>${p.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="order-field">
+          <label>Contra</label>
+          <select onchange="setOrderField('${fac}','enemy',this.value)">
+            <option value="">— Alianza enemiga —</option>
+            ${FACTIONS_ORDER.filter(x=>x.id!==fac).map(x=>`<option value="${x.id}" ${pending.enemy===x.id?'selected':''}>${x.name} (${x.player})</option>`).join('')}
+          </select>
+        </div>
+        <div class="order-field">
+          <label>Resultado</label>
+          <div class="order-result-row">
+            <button class="result-btn win  ${orderResults[fac]==='win'  ?'selected':''}" onclick="setOrderResult('${fac}','win')">Victoria</button>
+            <button class="result-btn draw ${orderResults[fac]==='draw' ?'selected':''}" onclick="setOrderResult('${fac}','draw')">Empate</button>
+            <button class="result-btn lose ${orderResults[fac]==='lose' ?'selected':''}" onclick="setOrderResult('${fac}','lose')">Derrota</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (op === 'void_leap') {
+    subfields = `
+      <div class="order-subfields">
+        <div class="order-field">
+          <label>Destino del Salto</label>
+          <select onchange="setOrderField('${fac}','leapTarget',this.value)">
+            ${getPlanetOptions()}
+            ${PLANETS.map(p => `<option value="${p.id}" ${pending.leapTarget===p.id?'selected':''}>${p.name}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+  } else if (op === 'build') {
+    subfields = `
+      <div class="order-subfields">
+        <div class="order-field">
+          <label>Infraestructura a Construir</label>
+          <select onchange="setOrderField('${fac}','buildType',this.value)">
+            <option value="">— Tipo de infraestructura —</option>
+            ${INFRA_BUILD_OPTIONS.map(o=>`<option value="${o.value}" ${pending.buildType===o.value?'selected':''}>${o.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="order-field">
+          <label>Planeta donde se construye</label>
+          <select onchange="setOrderField('${fac}','buildPlanet',this.value)">
+            ${getPlanetOptions()}
+            ${PLANETS.map(p=>`<option value="${p.id}" ${pending.buildPlanet===p.id?'selected':''}>${p.name}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+  } else if (op === 'logistics') {
+    subfields = `
+      <div class="order-subfields">
+        <div class="order-field">
+          <label>Flota que realiza la operación</label>
+          <select onchange="setOrderField('${fac}','logisticsFleet',this.value)">
+            <option value="a" ${pending.logisticsFleet==='a'?'selected':''}>Flota A${fleetPlanet?' — '+fleetPlanet.name:''}</option>
+          </select>
+        </div>
+      </div>`;
+  } else if (op === 'elimination') {
+    subfields = `
+      <div class="order-subfields">
+        <div class="order-field">
+          <label>Planeta Objetivo</label>
+          <select onchange="setOrderField('${fac}','elimTarget',this.value)">
+            ${getPlanetOptions()}
+            ${PLANETS.map(p=>`<option value="${p.id}" ${pending.elimTarget===p.id?'selected':''}>${p.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="order-field">
+          <label>Resultado (D6 ≥ 5 = éxito por alianza enemiga)</label>
+          <div class="order-result-row">
+            <button class="result-btn win  ${orderResults[fac]==='win'  ?'selected':''}" onclick="setOrderResult('${fac}','win')">Éxito</button>
+            <button class="result-btn lose ${orderResults[fac]==='lose' ?'selected':''}" onclick="setOrderResult('${fac}','lose')">Fallo</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const committedClass = committed ? 'committed' : '';
+  const committedLabel = committed ? '✔ Orden Confirmada' : 'Confirmar Orden';
+
+  return `
+    <div class="order-panel" id="opanel-${fac}">
+      <div class="order-panel-header">
+        <div class="order-faction-bar" style="background:${f.barColor}"></div>
+        <div>
+          <div class="order-faction-name" style="color:${f.color}">${f.name}</div>
+          <div class="order-faction-player">${f.player} · ${fleetLabel}</div>
+        </div>
+      </div>
+      <div class="order-body">
+        <div class="order-field">
+          <label>Operación</label>
+          <select onchange="setOrderOp('${fac}',this.value)" ${committed?'disabled':''}>
+            <option value="">— Seleccionar operación —</option>
+            ${OPERATIONS.map(o=>`<option value="${o.value}" ${op===o.value?'selected':''}>${o.label}</option>`).join('')}
+          </select>
+        </div>
+        ${op ? subfields : ''}
+        <button class="order-commit-btn ${committedClass}"
+          onclick="commitOrder('${fac}')"
+          ${committed?'disabled':''}>
+          ${committedLabel}
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderOrdersPanel() {
+  const col = document.getElementById('ordersColumns');
+  if (!col) return;
+  // Sync phase display
+  const phase = state.phase || 1;
+  const pd = document.getElementById('orders-phase-display');
+  if (pd) pd.textContent = phase;
+  col.innerHTML = FACTIONS_ORDER.map(f => buildOrderPanel(f.id)).join('');
+}
+
+function setOrderOp(fac, op) {
+  pendingOrders[fac] = { operation: op, committed: false };
+  orderResults[fac] = null;
+  renderOrdersPanel();
+}
+
+function setOrderField(fac, field, value) {
+  pendingOrders[fac][field] = value;
+}
+
+function setOrderResult(fac, result) {
+  orderResults[fac] = result;
+  // Re-render just the result buttons without full re-render
+  const panel = document.getElementById('opanel-' + fac);
+  if (panel) {
+    panel.querySelectorAll('.result-btn').forEach(btn => {
+      btn.classList.remove('selected');
+      if (btn.classList.contains(result)) btn.classList.add('selected');
+    });
+  }
+}
+
+function commitOrder(fac) {
+  const pending = pendingOrders[fac];
+  const op = pending.operation;
+  if (!op) { alert('Selecciona una operación primero.'); return; }
+
+  const phase = state.phase || 1;
+  const f = FACTIONS_ORDER.find(x => x.id === fac);
+  const opLabel = OPERATIONS.find(o => o.value === op)?.label || op;
+  let detail = '', resultStr = '', resultClass = 'ok';
+
+  // ── Apply effects to state and build detail string ──
+  if (op === 'battle') {
+    const atk = ATTACK_TYPES.find(a => a.value === pending.attackType)?.label || pending.attackType;
+    const tgt = PLANETS.find(p => p.id === pending.targetPlanet)?.name || '?';
+    const enemy = FACTIONS_ORDER.find(x => x.id === pending.enemy)?.name || '?';
+    const result = orderResults[fac];
+    detail = `${atk} · vs ${enemy} · en ${tgt}`;
+    resultStr = result === 'win' ? 'Victoria' : result === 'lose' ? 'Derrota' : result === 'draw' ? 'Empate' : '—';
+    resultClass = result === 'win' ? 'win' : result === 'lose' ? 'lose' : 'draw';
+
+    // Apply campaign outcome: +1 NP to attacker on win/draw, -1 defender NP on win
+    if (pending.targetPlanet && state.planets[pending.targetPlanet]) {
+      const ps = state.planets[pending.targetPlanet];
+      if (result === 'win') {
+        ps.power[fac] = Math.min(4, (ps.power[fac] || 0) + 1);
+        if (pending.enemy) ps.power[pending.enemy] = Math.max(0, (ps.power[pending.enemy] || 0) - 1);
+      } else if (result === 'draw') {
+        ps.power[fac] = Math.min(4, (ps.power[fac] || 0) + 1);
+      }
+      // Defeated attacker loses nothing by default (defender already kept their level)
+    }
+
+  } else if (op === 'void_leap') {
+    const tgt = PLANETS.find(p => p.id === pending.leapTarget);
+    detail = `Flota A → ${tgt ? tgt.name : '?'}`;
+    resultStr = '✓'; resultClass = 'ok';
+    // Update fleet position in state
+    if (tgt) {
+      state.fleets[fac + '-a'] = tgt.name;
+      // Sync fleet selector in tracker if exists
+      const fleetEl = document.getElementById('fleet-' + fac + '-a');
+      if (fleetEl) fleetEl.value = tgt.name;
+    }
+
+  } else if (op === 'build') {
+    const infra = INFRA_BUILD_OPTIONS.find(o => o.value === pending.buildType)?.label || pending.buildType;
+    const planet = PLANETS.find(p => p.id === pending.buildPlanet);
+    detail = `${infra} en ${planet ? planet.name : '?'}`;
+    resultStr = '✓'; resultClass = 'ok';
+    // Place infra in first free slot on the target planet
+    if (pending.buildPlanet && pending.buildType && state.planets[pending.buildPlanet]) {
+      const ps = state.planets[pending.buildPlanet];
+      const freeIdx = ps.infra.findIndex(s => !s.type);
+      if (freeIdx !== -1) {
+        ps.infra[freeIdx] = { type: pending.buildType, owner: fac };
+      }
+    }
+
+  } else if (op === 'logistics') {
+    const fleetPlanetName = state.fleets?.[fac + '-a'];
+    detail = `Flota A · ${fleetPlanetName || 'sin planeta'}`;
+    resultStr = '✓'; resultClass = 'ok';
+
+  } else if (op === 'elimination') {
+    const tgt = PLANETS.find(p => p.id === pending.elimTarget);
+    const result = orderResults[fac];
+    detail = `Objetivo: ${tgt ? tgt.name : '?'}`;
+    resultStr = result === 'win' ? 'Éxito' : result === 'lose' ? 'Fallo' : '—';
+    resultClass = result === 'win' ? 'win' : 'lose';
+    // On success, reduce enemy NP on target by 1 (each enemy faction rolls separately — here we apply for all enemies if success)
+    if (result === 'win' && pending.elimTarget && state.planets[pending.elimTarget]) {
+      const ps = state.planets[pending.elimTarget];
+      FACTIONS_ORDER.filter(x => x.id !== fac).forEach(enemy => {
+        if ((ps.power[enemy.id] || 0) > 0) {
+          ps.power[enemy.id] = Math.max(0, ps.power[enemy.id] - 1);
+        }
+      });
+    }
+  }
+
+  // Mark as committed
+  pendingOrders[fac].committed = true;
+
+  // Persist to order history
+  if (!state.orderHistory) state.orderHistory = [];
+  state.orderHistory.unshift({ phase, fac, facName: f.name, player: f.player, op, opLabel, detail, result: resultStr, resultClass });
+
+  // Push to event log too
+  addEventEntry(`[Órdenes] ${f.name} (${f.player}): ${opLabel}${detail ? ' — ' + detail : ''}${resultStr && resultStr !== '✓' ? ' → ' + resultStr : ''}`);
+
+  // Save & refresh everything
+  saveState();
+  renderOrdersPanel();
+  renderPlanets();
+  renderOrderHistory();
+}
+
+function renderOrderHistory() {
+  const tbody = document.getElementById('orderHistoryBody');
+  if (!tbody) return;
+  const history = state.orderHistory || [];
+  if (history.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-dim);font-size:13px;padding:20px;">Sin órdenes registradas todavía.</td></tr>`;
+    return;
+  }
+  const f = FACTIONS_ORDER.reduce((acc, x) => { acc[x.id] = x; return acc; }, {});
+  tbody.innerHTML = history.map(h => `
+    <tr>
+      <td class="h-phase">${h.phase}</td>
+      <td class="h-faction" style="color:${f[h.fac]?.color||'#aaa'}">${h.facName}<br><span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);font-weight:normal;">${h.player}</span></td>
+      <td class="h-op">${h.opLabel}</td>
+      <td class="h-detail">${h.detail || '—'}</td>
+      <td class="h-result ${h.resultClass}">${h.result || '—'}</td>
+    </tr>`).join('');
+}
+
+function clearOrderHistory() {
+  if (!confirm('¿Borrar todo el historial de órdenes?')) return;
+  state.orderHistory = [];
+  try { localStorage.setItem('vespator_state', JSON.stringify(state)); } catch(e) {}
+  renderOrderHistory();
+}
+
+function resetOrdersForNewPhase() {
+  pendingOrders = { tyranid: {}, necron: {}, ultra: {} };
+  orderResults  = { tyranid: null, necron: null, ultra: null };
+  renderOrdersPanel();
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderPlanets();
+  restoreUIFromState();
+  recalcPoints();
+  renderOrderHistory();
+  loadDriveUrl();
+  // Auto-load from Drive if URL is configured (after 800ms to let UI render first)
+  if (localStorage.getItem(DRIVE_URL_KEY)) {
+    setTimeout(() => autoLoadFromDrive(), 800);
+  }
+});
+// ======================================================
+// MAP ENGINE — planet coords calibrated to the official
+// Vespator Front map layout (1400×860 canvas)
+// ======================================================
+
+// Positions match the real map layout, scaled proportionally.
+// Origin: top-left. The map image is landscape (wider than tall).
+const MAP_PLANETS = {
+  //             x     y        ← calibrated to official map
+  norallus:   { x: 195, y: 155 },   // top-left cluster
+  masnet:     { x: 395, y: 245 },   // centre-left, below norallus
+  felgris:    { x: 620, y: 85  },   // top-centre
+  tarkad:     { x: 840, y: 205 },   // top-right area
+  jawardet:   { x: 1110, y: 250 },  // far right
+  kryndaer:   { x: 410, y: 415 },   // centre, below masnet
+  novamagnor: { x: 660, y: 445 },   // centre
+  astarthem:  { x: 935, y: 480 },   // centre-right
+  karabas:    { x: 175, y: 495 },   // left side
+  caltus:     { x: 500, y: 615 },   // centre-lower
+  marvinius:  { x: 210, y: 735 },   // bottom-left
+  vikus:      { x: 595, y: 760 },   // bottom-centre
+  ikaron:     { x: 940, y: 720 },   // bottom-right
+};
+
+// ── Connections — corrected per player feedback ──
+const MAP_CONNECTIONS = [
+  // Norallus → Masnet, Karabas, Kryndaer
+  ['norallus',   'masnet'],
+  ['norallus',   'karabas'],
+  ['norallus',   'kryndaer'],
+
+  // Masnet → Felgris, Tarkad  (Kryndaer ELIMINADO; Tarkad AÑADIDO)
+  ['masnet',     'felgris'],
+  ['masnet',     'tarkad'],
+
+  // Felgris → Tarkad
+  ['felgris',    'tarkad'],
+
+  // Tarkad → Jawardet, Novamagnor  (Astarthem ELIMINADO)
+  ['tarkad',     'jawardet'],
+  ['tarkad',     'novamagnor'],
+
+  // Jawardet → Astarthem
+  ['jawardet',   'astarthem'],
+
+  // Kryndaer → Karabas, Caltus  (sin Novamagnor)
+  ['kryndaer',   'karabas'],
+  ['kryndaer',   'caltus'],
+
+  // Novamagnor → Astarthem, Ikaron
+  ['novamagnor', 'astarthem'],
+  ['novamagnor', 'ikaron'],
+
+  // Karabas → (sin Marvinius; Marvinius ELIMINADO)
+
+  // Caltus → Marvinius, Vikus
+  ['caltus',     'marvinius'],
+  ['caltus',     'vikus'],
+
+  // Astarthem → (sin Ikaron; ELIMINADO)
+
+  // Jawardet → Ikaron (AÑADIDO)
+  ['jawardet',   'ikaron'],
+
+  // Ikaron → Caltus (AÑADIDO)
+  ['ikaron',     'caltus'],
+
+  // Marvinius → Vikus  (sin Karabas; ELIMINADO)
+  ['marvinius',  'vikus'],
+
+  // Vikus → (sin Ikaron; ELIMINADO)
+];
+
+const THEATRE_ICONS = {
+  'Desolate Wastes':    '◇',
+  'Xenoflora Jungle':   '✦',
+  'Rad Zone':           '◎',
+  'Forge Complex':      '⬡',
+  'Hab Sprawl':         '▦',
+  'Spaceport':          '⊕',
+  'Dead Lands':         '△',
+  'Delvesite Facility': '◈',
+  'Tomb Complex':       '⬢',
+};
+
+const INFRA_SYMBOLS = {
+  'stronghold':     { label: 'Fortaleza' },
+  'support':        { label: 'Inst. Apoyo' },
+  'staging':        { label: 'Zona Despl.' },
+  'fortification':  { label: 'Línea Fort.' },
+  'destroyed-slot': { label: 'Destruida' },
+};
+
+const FACTION_COLORS = {
+  tyranid: { fill: '#c0392b', bright: '#e74c3c', dim: '#6b1f17', track: '#8b1a10' },
+  necron:  { fill: '#27ae60', bright: '#2ecc71', dim: '#14572f', track: '#0e3d20' },
+  ultra:   { fill: '#2980b9', bright: '#3498db', dim: '#154360', track: '#0d2e4a' },
+};
+const FACTION_LABELS = { tyranid: 'Alex (Tyr.)', necron: 'Dani (Nec.)', ultra: 'Pablo (Ult.)' };
+
+// Map pan/zoom state
+let mapTransform = { x: 0, y: 0, scale: 1 };
+let mapDragging = false;
+let mapDragStart = { x: 0, y: 0, tx: 0, ty: 0 };
+const MAP_W = 1400, MAP_H = 860;
+
+function svgNS(tag, attrs, children) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  for (const c of (children || [])) {
+    if (typeof c === 'string') el.textContent = c;
+    else if (c) el.appendChild(c);
+  }
+  return el;
+}
+
+function arcPath(cx, cy, r, startDeg, endDeg) {
+  const s = (startDeg - 90) * Math.PI / 180;
+  const e = (endDeg   - 90) * Math.PI / 180;
+  const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
+  const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
+  const large = (endDeg - startDeg > 180) ? 1 : 0;
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+}
+
+// ── SVG token icons matching the official sticker sheet ──
+// Each returns a <g> element drawn around (0,0); caller translates it.
+function makeInfraIcon(type, color, r) {
+  // r = radius of the token circle
+  const g = svgNS('g');
+  const bg = svgNS('circle', { cx:0, cy:0, r, fill: color+'33', stroke: color, 'stroke-width':'1.2' });
+  g.appendChild(bg);
+  const s = r * 0.52;
+  if (type === 'stronghold') {
+    // Gear / cog shape (Stronghold icon)
+    const teeth = 8, ir = s*0.55, or_ = s*0.92;
+    let d = '';
+    for (let i = 0; i < teeth; i++) {
+      const a1 = (i / teeth) * Math.PI * 2 - Math.PI/2;
+      const a2 = a1 + (0.5/teeth) * Math.PI * 2;
+      const a3 = a2 + (0.15/teeth) * Math.PI * 2;
+      const a4 = a3 + (0.35/teeth) * Math.PI * 2;
+      if (i === 0) d += `M ${Math.cos(a1)*ir} ${Math.sin(a1)*ir} `;
+      d += `L ${Math.cos(a1)*or_} ${Math.sin(a1)*or_} `;
+      d += `L ${Math.cos(a2)*or_} ${Math.sin(a2)*or_} `;
+      d += `L ${Math.cos(a3)*ir} ${Math.sin(a3)*ir} `;
+      d += `L ${Math.cos(a4)*ir} ${Math.sin(a4)*ir} `;
+    }
+    d += 'Z';
+    g.appendChild(svgNS('path', { d, fill: color, opacity:'0.9' }));
+    g.appendChild(svgNS('circle', { cx:0, cy:0, r: s*0.3, fill: color+'44', stroke: color, 'stroke-width':'0.8' }));
+  } else if (type === 'staging') {
+    // 4 small stars / diamond crosses (Staging Grounds)
+    const pos4 = [[-s*0.38,-s*0.38],[s*0.38,-s*0.38],[-s*0.38,s*0.38],[s*0.38,s*0.38]];
+    for (const [px,py] of pos4) {
+      const ss = s*0.25;
+      g.appendChild(svgNS('path', {
+        d:`M ${px} ${py-ss} L ${px+ss*0.3} ${py-ss*0.3} L ${px+ss} ${py} L ${px+ss*0.3} ${py+ss*0.3} L ${px} ${py+ss} L ${px-ss*0.3} ${py+ss*0.3} L ${px-ss} ${py} L ${px-ss*0.3} ${py-ss*0.3} Z`,
+        fill: color, opacity:'0.9'
+      }));
+    }
+  } else if (type === 'support') {
+    // Satellite dish / parabola (Support Facility)
+    const rm = s*0.75;
+    g.appendChild(svgNS('path', {
+      d: `M ${-rm} 0 A ${rm} ${rm} 0 0 1 ${rm} 0 Z`,
+      fill: color, opacity:'0.85'
+    }));
+    g.appendChild(svgNS('line', { x1:0, y1:0, x2:0, y2:-s*0.9, stroke:color, 'stroke-width':'1.5', 'stroke-linecap':'round' }));
+    g.appendChild(svgNS('circle', { cx:0, cy:-s*0.9, r:s*0.18, fill:color }));
+    // mast
+    g.appendChild(svgNS('line', { x1:0, y1:0, x2:s*0.45, y2:s*0.55, stroke:color, 'stroke-width':'1', opacity:'0.7' }));
+  } else if (type === 'fortification') {
+    // Hill / fortification silhouette (Fortification Line)
+    const w = s*1.1;
+    g.appendChild(svgNS('path', {
+      d:`M ${-w} ${s*0.35} Q ${-w*0.5} ${-s*0.5} 0 ${-s*0.7} Q ${w*0.5} ${-s*0.5} ${w} ${s*0.35} Z`,
+      fill: color, opacity:'0.85'
+    }));
+    // battlements
+    const bw = w*0.18, bh = s*0.22, by = -s*0.72;
+    for (let bx of [-w*0.35, 0, w*0.35]) {
+      g.appendChild(svgNS('rect', { x: bx-bw/2, y: by-bh, width:bw, height:bh, fill:color, opacity:'0.9' }));
+    }
+  } else if (type === 'destroyed-slot') {
+    g.appendChild(svgNS('line', { x1:-s, y1:-s, x2:s, y2:s, stroke:'#555', 'stroke-width':'2' }));
+    g.appendChild(svgNS('line', { x1:s, y1:-s, x2:-s, y2:s, stroke:'#555', 'stroke-width':'2' }));
+  }
+  return g;
+}
+
+// Fleet marker — faction-specific shapes matching the token colours
+// Blue (Ultramarine): triangle pointing up  ▲ (bolter sight shape)
+// Green (Necron):     diamond ◆             (scarab/portal shape)
+// Red (Tyranid):      inverted triangle ▽  (talon/claw shape)
+function makeFleetToken(fac, cx, cy) {
+  const col = FACTION_COLORS[fac];
+  const g = svgNS('g', { class:'fleet-marker' });
+  const R = 10;
+  // Glow aura
+  g.appendChild(svgNS('circle', { cx, cy, r:R+3, fill:col.bright, opacity:'0.12' }));
+  // Token border circle
+  g.appendChild(svgNS('circle', { cx, cy, r:R, fill:col.track, stroke:col.bright, 'stroke-width':'1.5', opacity:'0.95' }));
+
+  if (fac === 'ultra') {
+    // Upward triangle (Ultramarine)
+    const h = R*0.72, hw = R*0.62;
+    g.appendChild(svgNS('polygon', {
+      points:`${cx},${cy-h} ${cx-hw},${cy+h*0.6} ${cx+hw},${cy+h*0.6}`,
+      fill:col.bright, opacity:'0.9'
+    }));
+  } else if (fac === 'necron') {
+    // Diamond (Necron)
+    const d = R*0.65;
+    g.appendChild(svgNS('polygon', {
+      points:`${cx},${cy-d} ${cx+d},${cy} ${cx},${cy+d} ${cx-d},${cy}`,
+      fill:col.bright, opacity:'0.9'
+    }));
+  } else {
+    // Downward triangle (Tyranid)
+    const h = R*0.72, hw = R*0.62;
+    g.appendChild(svgNS('polygon', {
+      points:`${cx},${cy+h} ${cx-hw},${cy-h*0.6} ${cx+hw},${cy-h*0.6}`,
+      fill:col.bright, opacity:'0.9'
+    }));
+  }
+  return g;
+}
+
+// Compact NP indicator: three small coloured pips stacked vertically inside node
+function makeNPBadge(cx, cy, ps, R) {
+  const g = svgNS('g');
+  const facs = ['tyranid','necron','ultra'];
+  // place NP numbers as tiny labels inside the planet core
+  facs.forEach((fac, i) => {
+    const np = ps.destroyed ? 0 : (ps.power[fac] || 0);
+    const angle = (i / 3) * Math.PI * 2 - Math.PI / 2; // 0°, 120°, 240°
+    const pr = R * 0.52;
+    const tx = cx + pr * Math.cos(angle);
+    const ty = cy + pr * Math.sin(angle);
+    g.appendChild(svgNS('circle', { cx: tx, cy: ty, r: 7,
+      fill: FACTION_COLORS[fac].fill + 'cc',
+      stroke: FACTION_COLORS[fac].bright, 'stroke-width':'0.8' }));
+    g.appendChild(svgNS('text', { x: tx, y: ty+3.5,
+      'text-anchor':'middle', fill:'#fff',
+      'font-size':'7', 'font-weight':'bold', 'font-family':'monospace' }, [String(np)]));
+  });
+  return g;
+}
+
+function renderMap() {
+  const svg = document.getElementById('mapSvg');
+  if (!svg) return;
+  svg.innerHTML = '';
+  svg.setAttribute('width', MAP_W);
+  svg.setAttribute('height', MAP_H);
+  svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
+
+  // ── Defs: glow filters ──
+  const defs = svgNS('defs');
+  const filter = svgNS('filter', { id:'glow', x:'-30%', y:'-30%', width:'160%', height:'160%' });
+  const fe1 = svgNS('feGaussianBlur', { stdDeviation:'3', result:'blur' });
+  const fe2 = svgNS('feMerge');
+  fe2.appendChild(svgNS('feMergeNode', { in:'blur' }));
+  fe2.appendChild(svgNS('feMergeNode', { in:'SourceGraphic' }));
+  filter.appendChild(fe1); filter.appendChild(fe2);
+  defs.appendChild(filter);
+  svg.appendChild(defs);
+
+  // ── Background ──
+  svg.appendChild(svgNS('rect', { width:MAP_W, height:MAP_H, fill:'#04060a' }));
+
+  // Background stars (seeded-random for stability)
+  const starGroup = svgNS('g', { opacity:'0.55' });
+  let sx = 1; // simple seeded rand
+  for (let i = 0; i < 160; i++) {
+    sx = (sx * 16807 + 7) % 2147483647;
+    const x = (sx % MAP_W);
+    sx = (sx * 16807 + 7) % 2147483647;
+    const y = (sx % MAP_H);
+    sx = (sx * 16807 + 7) % 2147483647;
+    const r = (sx % 12) / 10 + 0.3;
+    sx = (sx * 16807 + 7) % 2147483647;
+    const op = ((sx % 6) / 10 + 0.2).toFixed(2);
+    starGroup.appendChild(svgNS('circle', { cx:x, cy:y, r, fill:'#fff', opacity:op }));
+  }
+  svg.appendChild(starGroup);
+
+  // Subtle grid
+  const gridG = svgNS('g', { opacity:'0.035', stroke:'#3a7ab5', 'stroke-width':'1' });
+  for (let x = 0; x <= MAP_W; x += 100) gridG.appendChild(svgNS('line',{x1:x,y1:0,x2:x,y2:MAP_H}));
+  for (let y = 0; y <= MAP_H; y += 100) gridG.appendChild(svgNS('line',{x1:0,y1:y,x2:MAP_W,y2:y}));
+  svg.appendChild(gridG);
+
+  // ── Connection lines ──
+  const connG = svgNS('g');
+  for (const [a, b] of MAP_CONNECTIONS) {
+    const pa = MAP_PLANETS[a], pb = MAP_PLANETS[b];
+    if (!pa || !pb) continue;
+    // Glow behind
+    connG.appendChild(svgNS('line', {
+      x1:pa.x, y1:pa.y, x2:pb.x, y2:pb.y,
+      stroke:'#3a7ab5', 'stroke-width':'3', opacity:'0.06'
+    }));
+    // Dashed line
+    connG.appendChild(svgNS('line', {
+      x1:pa.x, y1:pa.y, x2:pb.x, y2:pb.y,
+      stroke:'#2a4060', 'stroke-width':'1.4',
+      'stroke-dasharray':'6,5', opacity:'0.75'
+    }));
+  }
+  svg.appendChild(connG);
+
+  // ── Planet nodes ──
+  const R = 30;
+  const planetG = svgNS('g');
+
+  for (const planet of PLANETS) {
+    const pos = MAP_PLANETS[planet.id];
+    if (!pos) continue;
+    const ps = state.planets[planet.id];
+    if (!ps) continue;
+
+    const g = svgNS('g', { class:'planet-node', id:'mnode-'+planet.id });
+
+    // — Background shadow disc —
+    g.appendChild(svgNS('circle', { cx:pos.x, cy:pos.y, r:R+8,
+      fill:'#000', opacity:'0.45' }));
+
+    // — Power arcs (3 × 120° sectors, each filled proportionally to NP) —
+    const arcData = [
+      { fac:'tyranid', startD:  0,  endD:120 },
+      { fac:'necron',  startD:120,  endD:240 },
+      { fac:'ultra',   startD:240,  endD:360 },
+    ];
+    const arcR = R + 7;
+    for (const ad of arcData) {
+      const np = ps.destroyed ? 0 : (ps.power[ad.fac] || 0);
+      const col = FACTION_COLORS[ad.fac];
+      // Background sector (always shown, dim)
+      g.insertBefore(svgNS('path', {
+        d: arcPath(pos.x, pos.y, arcR, ad.startD, ad.endD),
+        fill:'none', stroke: col.dim, 'stroke-width':'5', opacity:'0.4',
+        'stroke-linecap':'round'
+      }), g.firstChild);
+      // Active fill proportional to NP (0=none, 4=full sector)
+      if (np > 0) {
+        const span = (ad.endD - ad.startD) * (np / 4);
+        g.appendChild(svgNS('path', {
+          d: arcPath(pos.x, pos.y, arcR, ad.startD, ad.startD + span),
+          fill:'none', stroke: col.bright, 'stroke-width':'5', opacity:'0.92',
+          'stroke-linecap':'round'
+        }));
+      }
+    }
+
+    // — Outer decorative dashed ring —
+    const outerCol = ps.destroyed ? '#333' : '#1e3050';
+    g.appendChild(svgNS('circle', { cx:pos.x, cy:pos.y, r:R+1,
+      fill:'none', stroke:outerCol, 'stroke-width':'1', 'stroke-dasharray':'3,3' }));
+
+    // — Dominant faction tint on core —
+    const dominantFac = (() => {
+      if (ps.destroyed) return null;
+      return ['tyranid','necron','ultra'].reduce((a,b) =>
+        (ps.power[a]||0) >= (ps.power[b]||0) ? a : b);
+    })();
+    const coreGrad = ps.destroyed ? '#1a1a1a'
+      : dominantFac ? FACTION_COLORS[dominantFac].dim : '#080e18';
+    g.appendChild(svgNS('circle', { cx:pos.x, cy:pos.y, r:R,
+      fill: coreGrad,
+      stroke: ps.destroyed ? '#333' : (dominantFac ? FACTION_COLORS[dominantFac].fill : '#1e3050'),
+      'stroke-width':'1.5' }));
+
+    // — Inner NP badge (3 coloured pips) —
+    if (!ps.destroyed) g.appendChild(makeNPBadge(pos.x, pos.y, ps, R));
+
+    // — Destroyed overlay —
+    if (ps.destroyed) {
+      const dx = 10;
+      g.appendChild(svgNS('line', {x1:pos.x-dx,y1:pos.y-dx,x2:pos.x+dx,y2:pos.y+dx,stroke:'#555','stroke-width':'2.5'}));
+      g.appendChild(svgNS('line', {x1:pos.x+dx,y1:pos.y-dx,x2:pos.x-dx,y2:pos.y+dx,stroke:'#555','stroke-width':'2.5'}));
+    }
+
+    // — Stronghold outer ring —
+    const shSlot = ps.infra.find(s => s.type === 'stronghold');
+    if (shSlot) {
+      const shCol = shSlot.owner ? FACTION_COLORS[shSlot.owner].bright : '#c8a94a';
+      g.appendChild(svgNS('circle', { cx:pos.x, cy:pos.y, r:R+16,
+        fill:'none', stroke:shCol, 'stroke-width':'1.8',
+        'stroke-dasharray':'2,3', opacity:'0.8' }));
+    }
+
+    // — Infrastructure tokens (small circles below the planet) —
+    const builtInfra = ps.infra.filter(s => s.type && s.type !== '');
+    if (builtInfra.length > 0) {
+      const tR = 9;
+      const totalW = builtInfra.length * (tR * 2 + 3) - 3;
+      let tx0 = pos.x - totalW / 2 + tR;
+      builtInfra.forEach((slot) => {
+        const ty = pos.y + R + 18;
+        const col = slot.owner ? FACTION_COLORS[slot.owner].bright : '#667788';
+        const icon = makeInfraIcon(slot.type, col, tR);
+        icon.setAttribute('transform', `translate(${tx0},${ty})`);
+        g.appendChild(icon);
+        tx0 += tR * 2 + 3;
+      });
+    }
+
+    // — Planet name —
+    const labelY = pos.y + R + (builtInfra.length > 0 ? 44 : 18);
+    g.appendChild(svgNS('text', {
+      x:pos.x, y: labelY,
+      'text-anchor':'middle', fill: ps.destroyed ? '#444' : '#c8d4e0',
+      'font-family':'Cinzel,serif', 'font-size':'10', 'font-weight':'700',
+      'letter-spacing':'0.06em'
+    }, [planet.name.toUpperCase()]));
+    g.appendChild(svgNS('text', {
+      x:pos.x, y: labelY + 11,
+      'text-anchor':'middle', fill:'#3a5570',
+      'font-family':'Share Tech Mono,monospace', 'font-size':'7.5',
+      'letter-spacing':'0.1em'
+    }, [planet.system]));
+
+    g.addEventListener('mouseenter', e => showMapTooltip(e, planet, ps));
+    g.addEventListener('mousemove',  e => moveMapTooltip(e));
+    g.addEventListener('mouseleave', () => hideMapTooltip());
+    planetG.appendChild(g);
+  }
+  svg.appendChild(planetG);
+
+  // ── Fleet tokens ──
+  const fleetG = svgNS('g');
+  const fleetMap = {
+    tyranid: state.fleets?.['tyranid-a'],
+    necron:  state.fleets?.['necron-a'],
+    ultra:   state.fleets?.['ultra-a'],
+  };
+  // Offsets so multiple fleets on same planet don't overlap
+  const fleetOff = { tyranid:-16, necron:0, ultra:16 };
+
+  for (const [fac, planetName] of Object.entries(fleetMap)) {
+    if (!planetName || planetName === 'En órbita / tránsito') continue;
+    const planet = PLANETS.find(p => p.name === planetName);
+    if (!planet) continue;
+    const pos = MAP_PLANETS[planet.id];
+    if (!pos) continue;
+    const fx = pos.x + fleetOff[fac];
+    const fy = pos.y - R - 16;
+    fleetG.appendChild(makeFleetToken(fac, fx, fy));
+  }
+  svg.appendChild(fleetG);
+
+  // ── Map legend (bottom-right corner) ──
+  const leg = svgNS('g', { transform:`translate(${MAP_W-185},${MAP_H-130})` });
+  leg.appendChild(svgNS('rect', { x:0, y:0, width:178, height:124,
+    fill:'rgba(4,6,10,0.82)', stroke:'#1e2d42', 'stroke-width':'1', rx:'3' }));
+  leg.appendChild(svgNS('text', { x:89, y:15, 'text-anchor':'middle',
+    fill:'#c8a94a', 'font-family':'Cinzel,serif', 'font-size':'9',
+    'font-weight':'700', 'letter-spacing':'0.15em' }, ['LEYENDA']));
+
+  const legendItems = [
+    { col:'#e74c3c', label:'🔴  Tiránidos — Alex',  shape:'▽' },
+    { col:'#2ecc71', label:'🟢  Necrones — Dani',   shape:'◆' },
+    { col:'#3498db', label:'🔵  Ultramarines — Pablo', shape:'▲' },
+  ];
+  legendItems.forEach((li, i) => {
+    const y = 30 + i * 16;
+    leg.appendChild(svgNS('circle', { cx:12, cy:y+1, r:6, fill:li.col+'33', stroke:li.col, 'stroke-width':'1.2' }));
+    leg.appendChild(svgNS('text', { x:11.5, y:y+4.5, 'text-anchor':'middle',
+      fill:li.col, 'font-size':'8', 'font-family':'monospace' }, [li.shape]));
+    leg.appendChild(svgNS('text', { x:22, y:y+5,
+      fill:'#8a9eb5', 'font-family':'Share Tech Mono,monospace', 'font-size':'8' }, [li.label]));
+  });
+
+  const infraLegend = [
+    { type:'stronghold',    col:'#c8a94a', label:'Fortaleza' },
+    { type:'support',       col:'#3498db', label:'Inst. Apoyo' },
+    { type:'staging',       col:'#2ecc71', label:'Zona Despl.' },
+    { type:'fortification', col:'#e74c3c', label:'Línea Fort.' },
+  ];
+  infraLegend.forEach((il, i) => {
+    const ix = 12 + (i % 2) * 88, iy = 85 + Math.floor(i/2) * 18;
+    const ico = makeInfraIcon(il.type, il.col, 7);
+    ico.setAttribute('transform', `translate(${ix},${iy})`);
+    leg.appendChild(ico);
+    leg.appendChild(svgNS('text', { x: ix+11, y: iy+3.5,
+      fill:'#6a7e94', 'font-family':'Share Tech Mono,monospace', 'font-size':'7.5' }, [il.label]));
+  });
+  svg.appendChild(leg);
+
+  applyMapTransform();
+  setupMapInteraction();
+}
+
+function showMapTooltip(e, planet, ps) {
+  const tt = document.getElementById('mapTooltip');
+  if (!tt) return;
+
+  const factions = ['tyranid','necron','ultra'];
+  const facLabels = { tyranid: '🔴 Alex', necron: '🟢 Dani', ultra: '🔵 Pablo' };
+
+  let powerRows = factions.map(f => {
+    const np = ps.power[f] || 0;
+    const pips = [1,2,3,4].map(v =>
+      `<div class="tt-pip" style="background:${v <= np ? FACTION_COLORS[f].fill : 'transparent'};border-color:${FACTION_COLORS[f].dim}"></div>`
+    ).join('');
+    return `<div class="tt-row">
+      <span class="tt-label">${facLabels[f]}</span>
+      <div class="tt-bar">${pips}</div>
+      <span style="color:${FACTION_COLORS[f].bright};font-family:monospace;font-size:13px;font-weight:bold;margin-left:6px;">${np}</span>
+    </div>`;
+  }).join('');
+
+  const theatreHtml = planet.theatres.map(t =>
+    `<span class="tt-badge">${THEATRE_ICONS[t]||''} ${THEATRE_NAMES[t]||t}</span>`
+  ).join('');
+
+  const infraHtml = ps.infra
+    .filter(s => s.type && s.type !== 'destroyed-slot')
+    .map(s => {
+      const sym = INFRA_SYMBOLS[s.type];
+      const col = s.owner ? FACTION_COLORS[s.owner]?.bright : '#aaa';
+      return `<span class="tt-badge" style="color:${col};">${sym?.label||s.type}</span>`;
+    }).join('') || '<span style="color:#4a6080;font-size:11px;">Sin infraestructura</span>';
+
+  // Fleets at this planet
+  const fleetMap = { tyranid: state.fleets?.['tyranid-a'], necron: state.fleets?.['necron-a'], ultra: state.fleets?.['ultra-a'] };
+  const fleetsHere = Object.entries(fleetMap)
+    .filter(([, name]) => name === planet.name)
+    .map(([f]) => `<span class="tt-badge" style="color:${FACTION_COLORS[f].bright};">⬤ ${FACTION_LABELS[f]}</span>`)
+    .join('');
+
+  tt.innerHTML = `
+    <div class="tt-name">${planet.name}</div>
+    <div class="tt-system">${planet.system}</div>
+    ${ps.destroyed ? '<div style="color:#e74c3c;font-size:12px;margin-bottom:8px;">⛔ PLANETA DESTRUIDO</div>' : ''}
+    ${powerRows}
+    <div class="tt-section">
+      <div class="tt-section-title">Teatros</div>
+      ${theatreHtml}
+    </div>
+    <div class="tt-section">
+      <div class="tt-section-title">Infraestructura</div>
+      ${infraHtml}
+    </div>
+    ${fleetsHere ? `<div class="tt-section"><div class="tt-section-title">Flotas en órbita</div>${fleetsHere}</div>` : ''}
+  `;
+  tt.classList.add('visible');
+  moveMapTooltip(e);
+}
+
+function moveMapTooltip(e) {
+  const tt = document.getElementById('mapTooltip');
+  if (!tt) return;
+  const x = e.clientX + 16, y = e.clientY - 10;
+  const maxX = window.innerWidth - 320, maxY = window.innerHeight - 400;
+  tt.style.left = Math.min(x, maxX) + 'px';
+  tt.style.top  = Math.min(y, maxY) + 'px';
+}
+
+function hideMapTooltip() {
+  const tt = document.getElementById('mapTooltip');
+  if (tt) tt.classList.remove('visible');
+}
+
+function applyMapTransform() {
+  const svg = document.getElementById('mapSvg');
+  if (!svg) return;
+  svg.style.transform = `translate(${mapTransform.x}px, ${mapTransform.y}px) scale(${mapTransform.scale})`;
+}
+
+function mapZoom(factor) {
+  const wrap = document.getElementById('mapWrap');
+  if (!wrap) return;
+  const ww = wrap.clientWidth, wh = wrap.clientHeight;
+  // Zoom toward center of viewport
+  const cx = ww / 2, cy = wh / 2;
+  const newScale = Math.max(0.3, Math.min(3, mapTransform.scale * factor));
+  const scaleRatio = newScale / mapTransform.scale;
+  mapTransform.x = cx - scaleRatio * (cx - mapTransform.x);
+  mapTransform.y = cy - scaleRatio * (cy - mapTransform.y);
+  mapTransform.scale = newScale;
+  applyMapTransform();
+}
+
+function mapReset() {
+  const wrap = document.getElementById('mapWrap');
+  if (!wrap) return;
+  const ww = wrap.clientWidth, wh = wrap.clientHeight;
+  const scaleX = ww / MAP_W, scaleY = wh / MAP_H;
+  const scale = Math.min(scaleX, scaleY) * 0.92;
+  mapTransform.scale = scale;
+  mapTransform.x = (ww - MAP_W * scale) / 2;
+  mapTransform.y = (wh - MAP_H * scale) / 2;
+  applyMapTransform();
+}
+
+function setupMapInteraction() {
+  const wrap = document.getElementById('mapWrap');
+  if (!wrap || wrap._mapReady) return;
+  wrap._mapReady = true;
+
+  // Mouse drag
+  wrap.addEventListener('mousedown', e => {
+    if (e.target.closest('.planet-node')) return;
+    mapDragging = true;
+    mapDragStart = { x: e.clientX, y: e.clientY, tx: mapTransform.x, ty: mapTransform.y };
+    wrap.classList.add('dragging');
+  });
+  window.addEventListener('mousemove', e => {
+    if (!mapDragging) return;
+    mapTransform.x = mapDragStart.tx + (e.clientX - mapDragStart.x);
+    mapTransform.y = mapDragStart.ty + (e.clientY - mapDragStart.y);
+    applyMapTransform();
+  });
+  window.addEventListener('mouseup', () => {
+    mapDragging = false;
+    wrap.classList.remove('dragging');
+  });
+
+  // Wheel zoom
+  wrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    const rect = wrap.getBoundingClientRect();
+    const cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+    const newScale = Math.max(0.3, Math.min(3, mapTransform.scale * factor));
+    const r = newScale / mapTransform.scale;
+    mapTransform.x = cx - r * (cx - mapTransform.x);
+    mapTransform.y = cy - r * (cy - mapTransform.y);
+    mapTransform.scale = newScale;
+    applyMapTransform();
+  }, { passive: false });
+
+  // Touch drag
+  let lastTouch = null;
+  wrap.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) {
+      lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY, tx: mapTransform.x, ty: mapTransform.y };
+    }
+  }, { passive: true });
+  wrap.addEventListener('touchmove', e => {
+    if (e.touches.length === 1 && lastTouch) {
+      mapTransform.x = lastTouch.tx + (e.touches[0].clientX - lastTouch.x);
+      mapTransform.y = lastTouch.ty + (e.touches[0].clientY - lastTouch.y);
+      applyMapTransform();
+    }
+  }, { passive: true });
+}
+</script>
+<!-- PWA Install Banner (Android / Chrome) -->
+<div id="pwaInstallBanner">
+  <div class="pwa-banner-row">
+    <div class="pwa-banner-icon">⚔</div>
+    <div class="pwa-banner-text">
+      <div class="pwa-banner-title">Instalar Vespator Front</div>
+      <div class="pwa-banner-sub">Añade la app a tu pantalla de inicio</div>
+    </div>
+  </div>
+  <div class="pwa-banner-btns">
+    <button class="pwa-install-btn" onclick="pwaInstall()">Instalar App</button>
+    <button class="pwa-dismiss-btn" onclick="pwaDismiss()">Ahora no</button>
+  </div>
+</div>
+
+<!-- iOS Install Instructions Panel -->
+<div id="iosInstallPanel">
+  <div class="ios-panel-title">⚔ Instalar en iPhone / iPad</div>
+  <div class="ios-steps">
+    <div class="ios-step">
+      <div class="ios-step-num">1</div>
+      <span>Pulsa el botón <strong>Compartir</strong> (□↑) en la barra de Safari</span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">2</div>
+      <span>Desplázate y pulsa <strong>"Añadir a pantalla de inicio"</strong></span>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-num">3</div>
+      <span>Pulsa <strong>"Añadir"</strong> — la app aparecerá en tu pantalla de inicio</span>
+    </div>
+  </div>
+  <button class="ios-close-btn" onclick="document.getElementById('iosInstallPanel').classList.remove('show')">Cerrar</button>
+</div>
+
+<script>
+// ===================== PWA / SERVICE WORKER =====================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .catch(err => console.log('SW error:', err));
+  });
+}
+
+// ── Install prompt (Android / Chrome) ──
+let pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  pwaPrompt = e;
+  // Only show if not already installed and not dismissed before
+  if (!localStorage.getItem('pwa_dismissed')) {
+    document.getElementById('pwaInstallBanner').classList.add('show');
+  }
+});
+
+async function pwaInstall() {
+  if (!pwaPrompt) return;
+  pwaPrompt.prompt();
+  const { outcome } = await pwaPrompt.userChoice;
+  pwaPrompt = null;
+  document.getElementById('pwaInstallBanner').classList.remove('show');
+}
+
+function pwaDismiss() {
+  localStorage.setItem('pwa_dismissed', '1');
+  document.getElementById('pwaInstallBanner').classList.remove('show');
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwaInstallBanner').classList.remove('show');
+});
+
+// ── iOS detection: show manual instructions ──
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+}
+function isInStandaloneMode() {
+  return window.navigator.standalone === true ||
+    window.matchMedia('(display-mode: standalone)').matches;
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (isIOS() && !isInStandaloneMode() && !localStorage.getItem('ios_banner_dismissed')) {
+    setTimeout(() => {
+      document.getElementById('iosInstallPanel').classList.add('show');
+      localStorage.setItem('ios_banner_dismissed', '1');
+    }, 2500);
+  }
+});
+</script>
+</body>
+</html>
