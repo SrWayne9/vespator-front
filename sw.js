@@ -2,7 +2,7 @@
 //  Vespator Front — Service Worker
 //  Permite uso offline y cacheo de recursos
 // ============================================================
-const CACHE_NAME = 'vespator-v3';
+const CACHE_NAME = 'vespator-v4';
 const CACHE_URLS = [
   '/',
   '/index.html',
