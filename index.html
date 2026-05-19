@@ -303,19 +303,50 @@
 
   /* THEATRES */
   .theatres-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-  .theatre-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    padding: 18px;
-  }
+  .theatre-card { background: var(--bg-card); border: 1px solid var(--border); padding: 18px; }
   .theatre-icon { font-size: 28px; margin-bottom: 10px; }
-  .theatre-name {
-    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
-    color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
-    margin-bottom: 8px;
+  .theatre-name { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .theatre-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 12px; }
+
+  /* Twists toggle button */
+  .theatre-twists-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(200,169,74,0.07); border: 1px solid var(--gold-dim);
+    color: var(--gold-dim); font-family: 'Cinzel', serif; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px;
+    cursor: pointer; width: 100%; transition: all 0.2s;
   }
-  .theatre-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
-  .theatre-twists { font-size: 12px; color: var(--accent); }
+  .theatre-twists-btn:hover { background: rgba(200,169,74,0.14); color: var(--gold); border-color: var(--gold); }
+  .theatre-twists-btn .btn-arrow { transition: transform 0.25s; font-size: 9px; }
+  .theatre-twists-btn.open { color: var(--gold); border-color: var(--gold); background: rgba(200,169,74,0.12); }
+  .theatre-twists-btn.open .btn-arrow { transform: rotate(90deg); }
+
+  /* Twists panel */
+  .theatre-twists-panel {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+    padding: 0;
+  }
+  .theatre-twists-panel.open {
+    max-height: 600px;
+    padding-top: 12px;
+  }
+  .twist-item {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold-dim);
+    padding: 10px 12px; margin-bottom: 8px;
+  }
+  .twist-item:last-child { margin-bottom: 0; }
+  .twist-roll {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .twist-name {
+    font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+    color: var(--text-bright); margin-bottom: 5px; letter-spacing: 0.06em;
+  }
+  .twist-rule { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
 
   /* INFRASTRUCTURE */
   .infra-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
@@ -1402,60 +1433,232 @@
   <p style="margin-bottom:20px; color:var(--text-dim);">Al jugar una batalla (excepto Abordaje), el <strong>atacante</strong> elige uno de los Teatros disponibles en ese planeta y lanza 1D6 para determinar el Giro (Twist) que aplica. Si se juega la Auxilia Logística, es el <strong>defensor</strong> quien elige el Teatro.</p>
 
   <div class="theatres-grid">
+
+    <!-- SPACEPORT -->
     <div class="theatre-card">
-      <div class="theatre-icon">🏚</div>
-      <div class="theatre-name">Yermos Desolados</div>
-      <div class="theatre-desc">Extensas llanuras abiertas, polvo y ruinas dispersas. Favorece unidades de infantería y montadas.</div>
-      <div class="theatre-twists">⬡ Suelo Abierto: Re-tira avances y cargas (sin monstruos/vehículos).<br>⬡ Combatientes Expuestos: Armas de distancia obtienen [ASALTO].</div>
-    </div>
-    <div class="theatre-card">
-      <div class="theatre-icon">🌿</div>
-      <div class="theatre-name">Jungla Xenoflora</div>
-      <div class="theatre-desc">Vegetación alienígena densa. Favorece ejércitos de cuerpo a cuerpo.</div>
-      <div class="theatre-twists">⬡ Esporas Carniceras: +1 Fuerza en armas de combate.<br>⬡ Flora Depredadora: Pruebas de Huida Desesperada al Retroceder.</div>
-    </div>
-    <div class="theatre-card">
-      <div class="theatre-icon">☢</div>
-      <div class="theatre-name">Zona de Radiación</div>
-      <div class="theatre-desc">Cenizas irradiadas. Reduce la letalidad y mejora la durabilidad. Estilo atricional.</div>
-      <div class="theatre-twists">⬡ Tormenta de Ceniza Tóxica: Límites de rango en rondas 2/3/4.<br>⬡ Interferencia Esotérica: Sin PC extra salvo los del inicio de fase.</div>
-    </div>
-    <div class="theatre-card">
-      <div class="theatre-icon">⚙</div>
-      <div class="theatre-name">Complejo de Forja</div>
-      <div class="theatre-desc">Instalaciones industriales activas. Favorece unidades resistentes y duras.</div>
-      <div class="theatre-twists">⬡ Corrosión Termal: +1 Penetración de Armadura a menos de 9".<br>⬡ Combustibles Volátiles: +1 a ataques de armas de Ráfaga.</div>
-    </div>
-    <div class="theatre-card">
-      <div class="theatre-icon">🏗</div>
-      <div class="theatre-name">Barriada Urbana</div>
-      <div class="theatre-desc">Bloques de habitáculos y ruinas densas. Favorece infantería en terreno.</div>
-      <div class="theatre-twists">⬡ Humos Voraces: Sigilo mientras estés en terreno de área.<br>⬡ Hacia las Profundidades: Reposicionamiento subterráneo a Reservas Estratégicas.</div>
-    </div>
-    <div class="theatre-card">
-      <div class="theatre-icon">🚀</div>
+      <div class="theatre-icon">⊕</div>
       <div class="theatre-name">Puerto Espacial</div>
-      <div class="theatre-desc">Infraestructura de comunicación y despliegue. Facilita maniobra y control de objetivos.</div>
-      <div class="theatre-twists">⬡ Bloqueo de Coordenadas: Los marcadores controlados aguantan hasta superar tu dominio.<br>⬡ Santuarios de Embarque: Reubicar unidades a Reservas Estratégicas.</div>
+      <div class="theatre-desc">Centro estratégico de comunicación y despliegue. Facilita maniobra y control de objetivos. Favorece ejércitos de élite que pueden aprovechar el Retroceso.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Bloqueo de Coordenadas</div>
+          <div class="twist-name">Coordinate Lock</div>
+          <div class="twist-rule">Al final de la fase de Mando, cada marcador de objetivo que el jugador activo controla permanece bajo su control hasta que el Nivel de Control del oponente sobre ese marcador sea mayor que el suyo al final de una fase.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Red de Vigilancia</div>
+          <div class="twist-name">Vid-feed Network</div>
+          <div class="twist-rule">Cada vez que una unidad de la lista de un jugador Retrocede, ese jugador puede elegir una de las siguientes opciones: hasta el final del turno, esa unidad puede disparar en un turno en que Retrocedió; o hasta el final del turno, esa unidad puede declarar una carga en un turno en que Retrocedió.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Santuarios de Embarque</div>
+          <div class="twist-name">Embarkation Shrines</div>
+          <div class="twist-rule">Al final del turno de cada jugador, su oponente puede seleccionar una unidad de su propio ejército que esté en rango de uno o más marcadores de objetivo y no en Rango de Trabado con enemigos. Esa unidad se retira del campo y pasa a Reservas Estratégicas.</div>
+        </div>
+      </div>
     </div>
+
+    <!-- DESOLATE WASTES -->
     <div class="theatre-card">
-      <div class="theatre-icon">🏜</div>
-      <div class="theatre-name">Tierras Muertas</div>
-      <div class="theatre-desc">Desiertos baldíos. Favorece monstruos y vehículos pesados.</div>
-      <div class="theatre-twists">⬡ Expansión Desolada: +3" de Movimiento a Monstruos y Vehículos.<br>⬡ Manto de Polvo: Sigilo tras Avanzar para Monstruos/Vehículos.</div>
+      <div class="theatre-icon">◇</div>
+      <div class="theatre-name">Yermos Desolados</div>
+      <div class="theatre-desc">Llanuras abiertas y baldías. Favorece unidades de Infantería y Montadas para maniobrar agresivamente y reposicionarse.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Suelo Abierto</div>
+          <div class="twist-name">Open Ground</div>
+          <div class="twist-rule">Los jugadores pueden repetir las tiradas de Avance y Carga realizadas por unidades de su ejército (excluidos Monstruos y Vehículos).</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Ojo del Juicio</div>
+          <div class="twist-name">Eye of Judgement</div>
+          <div class="twist-rule">Al final del paso Declarar Formaciones de Batalla, empezando por el Atacante, cada jugador selecciona hasta dos unidades de su ejército (excluidos Monstruos y Vehículos). Los modelos de esas unidades tienen la habilidad Exploradores 6".</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Combatientes Expuestos</div>
+          <div class="twist-name">Exposed Combatants</div>
+          <div class="twist-rule">Las armas a distancia equipadas por modelos (excluidos Monstruos y Vehículos) obtienen la habilidad [ASALTO].</div>
+        </div>
+      </div>
     </div>
+
+    <!-- XENOFLORA JUNGLE -->
     <div class="theatre-card">
-      <div class="theatre-icon">⛏</div>
+      <div class="theatre-icon">✦</div>
+      <div class="theatre-name">Jungla Xenoflora</div>
+      <div class="theatre-desc">Vegetación alienígena densa y peligrosa. Favorece ejércitos orientados al cuerpo a cuerpo. Penaliza el Retroceso.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Esporas Carniceras</div>
+          <div class="twist-name">Slaughter Spores</div>
+          <div class="twist-rule">Mejora en 1 la característica de Fuerza de las armas de combate equipadas por los modelos.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Infierno Verde</div>
+          <div class="twist-name">Green Hell</div>
+          <div class="twist-rule">Las plantas y árboles son tan densos y su bioirradiación esotérica tan extraña que los guerreros no pueden detectar al enemigo hasta que están encima. Las unidades no pueden usar la Estratagema de Fuego de Cobertura (Fire Overwatch).</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Flora Depredadora</div>
+          <div class="twist-name">Predatory Plantlife</div>
+          <div class="twist-rule">Cada vez que una unidad (excluidos Monstruos y Vehículos) Retrocede, todos sus modelos deben superar una prueba de Huida Desesperada. Si la unidad está Sacudida de Batalla, resta 1 a cada prueba.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAD ZONE -->
+    <div class="theatre-card">
+      <div class="theatre-icon">◎</div>
+      <div class="theatre-name">Zona de Radiación</div>
+      <div class="theatre-desc">Cenizas irradiadas. Reduce la letalidad y perturba las comunicaciones. Favorece estilos de juego atricionales.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Tormenta de Ceniza Tóxica</div>
+          <div class="twist-name">Toxic Ash Storm</div>
+          <div class="twist-rule">En ronda 2: solo se puede disparar a unidades a 18" o menos. En ronda 3: solo a 12" o menos. En ronda 4: solo a 18" o menos.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Malestar Radiactivo</div>
+          <div class="twist-name">Rad Malaise</div>
+          <div class="twist-rule">Cada vez que un modelo realiza un ataque de combate que apunta a una unidad enemiga, si esa unidad enemiga realizó un movimiento de Carga este turno, añade 1 a la tirada de Impacto.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Interferencia Esotérica</div>
+          <div class="twist-name">Esoteric Interference</div>
+          <div class="twist-rule">Salvo el 1PC que se gana al inicio de la fase de Mando, los jugadores no pueden ganar PC adicionales de ninguna fuente (incluidos otros PC ganados al inicio de la fase de Mando).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORGE COMPLEX -->
+    <div class="theatre-card">
+      <div class="theatre-icon">⬡</div>
+      <div class="theatre-name">Complejo de Forja</div>
+      <div class="theatre-desc">Instalaciones industriales activas. Favorece unidades resistentes. Perjudica a tropas ligeras por los gases y el calor extremo.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Corrosión Termal</div>
+          <div class="twist-name">Thermic Corrosion</div>
+          <div class="twist-rule">Cada vez que un modelo realiza un ataque que apunta a una unidad enemiga (excluidos Monstruos y Vehículos) a 9" o menos, mejora en 1 la Penetración de Armadura de ese ataque.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Ventilación Plásmida</div>
+          <div class="twist-name">Plasmic Venting</div>
+          <div class="twist-rule">Al inicio de la ronda, si la ventilación no ha ocurrido aún, el Atacante tira 1D6: con un resultado igual o menor al número de ronda actual, la ventilación ocurre. Cuando el vapor se libera, tira 1D6 por cada unidad no en rango de un marcador de objetivo: si el resultado es igual o mayor que su Resistencia, esa unidad queda Fijada hasta el final de la ronda (−2" Mov, −2 a tiradas de Carga, y Fijada).</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Combustibles Volátiles</div>
+          <div class="twist-name">Volatile Combustibles</div>
+          <div class="twist-rule">Cada vez que los jugadores determinan cuántos ataques se realizan con un arma de Ráfaga (Blast), añade 1 adicional al resultado.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HAB SPRAWL -->
+    <div class="theatre-card">
+      <div class="theatre-icon">▦</div>
+      <div class="theatre-name">Barriada Urbana</div>
+      <div class="theatre-desc">Bloques de habitáculos y ruinas densas. Favorece infantería que aprovecha los terrenos de área para sobrevivir o atacar.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Humos Voraces</div>
+          <div class="twist-name">Roiling Fumes</div>
+          <div class="twist-rule">Mientras un modelo esté completamente dentro de un Terreno de Área, ese modelo tiene la habilidad Sigilo (Stealth).</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Posiciones de Fuego</div>
+          <div class="twist-name">Firing Positions</div>
+          <div class="twist-rule">Mientras una unidad esté completamente dentro de un Terreno de Área, esa unidad puede ser objetivo de la Estratagema de Fuego de Cobertura (Fire Overwatch) por 0PC, y cuando se resuelva esa Estratagema, los impactos se anotan con tiradas de Impacto sin modificar de 5+.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Hacia las Profundidades</div>
+          <div class="twist-name">Into the Depths</div>
+          <div class="twist-rule">Al final del turno de cada jugador, su oponente puede seleccionar una unidad de su ejército completamente dentro de un Terreno de Área y no en Rango de Trabado con enemigos. Esa unidad se retira del campo y pasa a Reservas Estratégicas.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELVESITE FACILITY -->
+    <div class="theatre-card">
+      <div class="theatre-icon">◈</div>
       <div class="theatre-name">Instalación de Extracción</div>
-      <div class="theatre-desc">Minas activas y maquinaria. Favorece ataques contra unidades resistentes.</div>
-      <div class="theatre-twists">⬡ Cargas Santificadas: Trampas en marcadores de zona neutral.<br>⬡ Sacudida Tectónica: [GOLPES LETALES] cerca de marcadores en zona neutral.</div>
+      <div class="theatre-desc">Minas activas y maquinaria peligrosa. Favorece ataques contra unidades resistentes con explosivos recuperados.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Cargas Santificadas</div>
+          <div class="twist-name">Sanctified Charges</div>
+          <div class="twist-rule">Al inicio de cada ronda, cada jugador selecciona en secreto un marcador de objetivo completamente en Tierra de Nadie. Una vez por batalla, cuando una unidad enemiga termine un movimiento Normal, Avance o Retroceso en rango de ese marcador, el jugador puede revelarlo y tirar 1D6: con 2+, esa unidad sufre D6+1 heridas mortales.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Lecho Rocoso Fracturado</div>
+          <div class="twist-name">Crumbling Bedrock</div>
+          <div class="twist-rule">Cada vez que un modelo de la lista de un jugador realiza un ataque a distancia que apunta a una unidad enemiga a 12" o menos, ese jugador puede ignorar cualquier o todos los modificadores a la Habilidad de Ballesta, la tirada de Impacto y la tirada de Herida de ese ataque.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Sacudida Tectónica</div>
+          <div class="twist-name">Tectonic Shock</div>
+          <div class="twist-rule">Cada vez que un ataque apunta a una unidad en rango de uno o más marcadores de objetivo en Tierra de Nadie, ese ataque tiene la habilidad [GOLPES LETALES].</div>
+        </div>
+      </div>
     </div>
+
+    <!-- DEAD LANDS -->
     <div class="theatre-card">
-      <div class="theatre-icon">🪦</div>
-      <div class="theatre-name">Complejo de Tumbas</div>
-      <div class="theatre-desc">Arquitectura Necrón emergiendo. Resultados impredecibles. Variado e interesante.</div>
-      <div class="theatre-twists">⬡ Compresión Espacio-Tiempo: +2 a todas las tiradas de Avance.<br>⬡ Blindaje Cuántico: Salvación invulnerable 5+ contra ataques a distancia.</div>
+      <div class="theatre-icon">△</div>
+      <div class="theatre-name">Tierras Muertas</div>
+      <div class="theatre-desc">Desiertos baldíos y zonas devastadas. Favorece Monstruos y Vehículos con mayor velocidad, durabilidad y letalidad.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Expansión Desolada</div>
+          <div class="twist-name">Bleak Expanse</div>
+          <div class="twist-rule">Añade 3" a la característica de Movimiento de las unidades de Monstruos y Vehículos.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Afloramientos Rocosos</div>
+          <div class="twist-name">Rocky Outcroppings</div>
+          <div class="twist-rule">Cada vez que una unidad de Monstruos o Vehículos permanece Estacionaria, hasta el final del turno, cada vez que un modelo de esa unidad realiza un ataque a distancia, repite una tirada de Impacto de 1.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Manto de Polvo</div>
+          <div class="twist-name">Shroud of Dust</div>
+          <div class="twist-rule">Cada vez que una unidad de Monstruos o Vehículos realiza un movimiento de Avance, hasta el inicio del siguiente turno del jugador, los modelos de esa unidad tienen la habilidad Sigilo (Stealth).</div>
+        </div>
+      </div>
     </div>
+
+    <!-- TOMB COMPLEX -->
+    <div class="theatre-card">
+      <div class="theatre-icon">⬢</div>
+      <div class="theatre-name">Complejo de Tumbas</div>
+      <div class="theatre-desc">Estructuras Necrón emergiendo del subsuelo. Efectos impredecibles y variados que no favorecen a ningún estilo en particular.</div>
+      <button class="theatre-twists-btn" onclick="toggleTwists(this)"><span class="btn-arrow">▶</span> Ver Giros (1D6)</button>
+      <div class="theatre-twists-panel">
+        <div class="twist-item">
+          <div class="twist-roll">1–2 · Compresión Espacio-Tiempo</div>
+          <div class="twist-name">Space-time Compression</div>
+          <div class="twist-rule">Añade 2 a todas las tiradas de Avance.</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">3–4 · Energías Abrumadoras</div>
+          <div class="twist-name">Overpowering Energies</div>
+          <div class="twist-rule">Cada vez que una unidad es seleccionada para disparar o luchar, puede usar esta regla. Si lo hace, hasta el final de la fase, añade 2 a la característica de Fuerza de las armas equipadas por modelos de esa unidad, y esas armas obtienen la habilidad [PELIGROSO].</div>
+        </div>
+        <div class="twist-item">
+          <div class="twist-roll">5–6 · Blindaje Cuántico</div>
+          <div class="twist-name">Quantum Shielding</div>
+          <div class="twist-rule">Los modelos tienen una salvación invulnerable de 5+ contra ataques a distancia.</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1798,48 +2001,33 @@
         <label>FLOTA A</label>
         <select id="fleet-tyranid-a" onchange="saveState()">
           <option value="">— Sin asignar —</option>
-          <optgroup label="Sistema Osymanden">
-            <option>Felgris Secundas</option>
-          </optgroup>
-          <optgroup label="Sistema Kasphos">
-            <option>Masnet</option>
-          </optgroup>
-          <optgroup label="Sistema Reiya">
-            <option>Tarkad Vindix</option>
-          </optgroup>
-          <optgroup label="Sistema Esvar">
-            <option>Jawardet</option>
-          </optgroup>
-          <optgroup label="Sistema Zur Mortalis">
-            <option>Kryndaer</option>
-          </optgroup>
-          <optgroup label="Sistema Heliodras">
-            <option>Novamagnor</option>
-          </optgroup>
-          <optgroup label="Sistema Orphon">
-            <option>Astarthem</option>
-          </optgroup>
-          <optgroup label="Sistema Salem">
-            <option>Karabas</option>
-          </optgroup>
-          <optgroup label="Sistema Gorund">
-            <option>Norallus</option>
-          </optgroup>
-          <optgroup label="Sistema Vespator">
-            <option>Caltus Novem</option>
-          </optgroup>
-          <optgroup label="Sistema Diodecis">
-            <option>Marvinius</option>
-          </optgroup>
-          <optgroup label="Sistema Vikulum">
-            <option>Vikus Decima</option>
-          </optgroup>
-          <optgroup label="Sistema Ixaron">
-            <option>Ikaron Prime</option>
-          </optgroup>
-          <optgroup label="Órbita">
-            <option>En órbita / tránsito</option>
-          </optgroup>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+      <div class="fleet-chip">
+        <label>FLOTA B</label>
+        <select id="fleet-tyranid-b" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+      <div class="fleet-chip">
+        <label>FLOTA C</label>
+        <select id="fleet-tyranid-c" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
         </select>
       </div>
     </div>
@@ -1862,6 +2050,28 @@
           <option>Ikaron Prime</option><option>En órbita / tránsito</option>
         </select>
       </div>
+      <div class="fleet-chip">
+        <label>FLOTA B</label>
+        <select id="fleet-necron-b" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+      <div class="fleet-chip">
+        <label>FLOTA C</label>
+        <select id="fleet-necron-c" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -1874,6 +2084,28 @@
       <div class="fleet-chip">
         <label>FLOTA A</label>
         <select id="fleet-ultra-a" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+      <div class="fleet-chip">
+        <label>FLOTA B</label>
+        <select id="fleet-ultra-b" onchange="saveState()">
+          <option value="">— Sin asignar —</option>
+          <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
+          <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
+          <option>Astarthem</option><option>Karabas</option><option>Norallus</option>
+          <option>Caltus Novem</option><option>Marvinius</option><option>Vikus Decima</option>
+          <option>Ikaron Prime</option><option>En órbita / tránsito</option>
+        </select>
+      </div>
+      <div class="fleet-chip">
+        <label>FLOTA C</label>
+        <select id="fleet-ultra-c" onchange="saveState()">
           <option value="">— Sin asignar —</option>
           <option>Felgris Secundas</option><option>Masnet</option><option>Tarkad Vindix</option>
           <option>Jawardet</option><option>Kryndaer</option><option>Novamagnor</option>
@@ -2093,7 +2325,7 @@ function loadState() {
     if (saved) {
       const parsed = JSON.parse(saved);
       // Version check: if no version or old version, reinitialise from scratch
-      if (!parsed.version || parsed.version < 3) {
+      if (!parsed.version || parsed.version < 4) {
         initState();
         return;
       }
@@ -2348,7 +2580,7 @@ function resetCampaign() {
 function initState() {
   // Build fresh state from PLANETS initial values
   state = {
-    version: 3,
+    version: 4,
     phase: 1,
     events: [],
     orderHistory: [],
@@ -2389,7 +2621,7 @@ function saveState() {
   });
 
   // Fleets
-  ['tyranid-a','necron-a','ultra-a'].forEach(k => {
+  ['tyranid-a','tyranid-b','tyranid-c','necron-a','necron-b','necron-c','ultra-a','ultra-b','ultra-c'].forEach(k => {
     const el = document.getElementById('fleet-' + k);
     if (el) state.fleets[k] = el.value;
   });
@@ -2621,7 +2853,7 @@ function restoreUIFromState() {
     if (el && state.strongholds) el.checked = state.strongholds[f] !== false;
   });
 
-  ['tyranid-a','necron-a','ultra-a'].forEach(k => {
+  ['tyranid-a','tyranid-b','tyranid-c','necron-a','necron-b','necron-c','ultra-a','ultra-b','ultra-c'].forEach(k => {
     const el = document.getElementById('fleet-' + k);
     if (el && state.fleets && state.fleets[k]) el.value = state.fleets[k];
   });
@@ -2644,7 +2876,21 @@ function showSection(id) {
   if (id === 'orders')  { renderOrdersPanel(); renderOrderHistory(); }
 }
 
-// ===================== ORDERS ENGINE =====================
+// ===================== THEATRE TWISTS TOGGLE =====================
+function toggleTwists(btn) {
+  const panel = btn.nextElementSibling;
+  const isOpen = panel.classList.contains('open');
+  // Close all other open panels in the same grid
+  document.querySelectorAll('.theatre-twists-panel.open').forEach(p => {
+    p.classList.remove('open');
+    p.previousElementSibling.classList.remove('open');
+  });
+  // Toggle this one
+  if (!isOpen) {
+    panel.classList.add('open');
+    btn.classList.add('open');
+  }
+}
 
 const FACTIONS_ORDER = [
   { id: 'tyranid', name: 'Tiránidos', player: 'Alex',  color: '#e74c3c', barColor: '#c0392b' },
@@ -2700,12 +2946,17 @@ function buildOrderPanel(fac) {
   const op = pending.operation || '';
   const committed = pending.committed || false;
 
-  // Fleet location label
-  const fleetPlanetId = state.fleets?.[fac + '-a'];
-  const fleetPlanet = fleetPlanetId ? PLANETS.find(p => p.name === fleetPlanetId) : null;
-  const fleetLabel = fleetPlanet
-    ? `<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">Flota en: <span style="color:${f.color}">${fleetPlanet.name}</span></span>`
-    : `<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">Flota: sin asignar</span>`;
+  // Fleet location labels for all 3 fleets
+  const fleetKeys = ['a','b','c'];
+  const fleetLocations = fleetKeys.map(k => {
+    const name = state.fleets?.[fac + '-' + k];
+    return name && name !== 'En órbita / tránsito' ? name : null;
+  });
+  const fleetLabelParts = fleetKeys.map((k,i) => {
+    const loc = fleetLocations[i];
+    return `<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">Flota ${k.toUpperCase()}: <span style="color:${f.color}">${loc || 'sin asignar'}</span></span>`;
+  });
+  const fleetLabel = fleetLabelParts.join(' · ');
 
   // Build operation-specific subfields
   let subfields = '';
@@ -2743,8 +2994,16 @@ function buildOrderPanel(fac) {
         </div>
       </div>`;
   } else if (op === 'void_leap') {
+    const fleetOpts = ['a','b','c'].map(k => {
+      const loc = state.fleets?.[fac+'-'+k] || 'sin asignar';
+      return `<option value="${k}" ${pending.leapFleet===k?'selected':''}>Flota ${k.toUpperCase()} (${loc})</option>`;
+    }).join('');
     subfields = `
       <div class="order-subfields">
+        <div class="order-field">
+          <label>Flota que salta</label>
+          <select onchange="setOrderField('${fac}','leapFleet',this.value)">${fleetOpts}</select>
+        </div>
         <div class="order-field">
           <label>Destino del Salto</label>
           <select onchange="setOrderField('${fac}','leapTarget',this.value)">
@@ -2772,13 +3031,15 @@ function buildOrderPanel(fac) {
         </div>
       </div>`;
   } else if (op === 'logistics') {
+    const lOpts = ['a','b','c'].map(k => {
+      const loc = state.fleets?.[fac+'-'+k] || 'sin asignar';
+      return `<option value="${k}" ${pending.logisticsFleet===k?'selected':''}>Flota ${k.toUpperCase()} — ${loc}</option>`;
+    }).join('');
     subfields = `
       <div class="order-subfields">
         <div class="order-field">
           <label>Flota que realiza la operación</label>
-          <select onchange="setOrderField('${fac}','logisticsFleet',this.value)">
-            <option value="a" ${pending.logisticsFleet==='a'?'selected':''}>Flota A${fleetPlanet?' — '+fleetPlanet.name:''}</option>
-          </select>
+          <select onchange="setOrderField('${fac}','logisticsFleet',this.value)">${lOpts}</select>
         </div>
       </div>`;
   } else if (op === 'elimination') {
@@ -2896,14 +3157,13 @@ function commitOrder(fac) {
     }
 
   } else if (op === 'void_leap') {
+    const fleetKey = pending.leapFleet || 'a';
     const tgt = PLANETS.find(p => p.id === pending.leapTarget);
-    detail = `Flota A → ${tgt ? tgt.name : '?'}`;
+    detail = `Flota ${fleetKey.toUpperCase()} → ${tgt ? tgt.name : '?'}`;
     resultStr = '✓'; resultClass = 'ok';
-    // Update fleet position in state
     if (tgt) {
-      state.fleets[fac + '-a'] = tgt.name;
-      // Sync fleet selector in tracker if exists
-      const fleetEl = document.getElementById('fleet-' + fac + '-a');
+      state.fleets[fac + '-' + fleetKey] = tgt.name;
+      const fleetEl = document.getElementById('fleet-' + fac + '-' + fleetKey);
       if (fleetEl) fleetEl.value = tgt.name;
     }
 
@@ -2922,11 +3182,10 @@ function commitOrder(fac) {
     }
 
   } else if (op === 'logistics') {
-    const fleetPlanetName = state.fleets?.[fac + '-a'];
-    detail = `Flota A · ${fleetPlanetName || 'sin planeta'}`;
+    const fleetKey = pending.logisticsFleet || 'a';
+    const fleetPlanetName = state.fleets?.[fac + '-' + fleetKey];
+    detail = `Flota ${fleetKey.toUpperCase()} · ${fleetPlanetName || 'sin planeta'}`;
     resultStr = '✓'; resultClass = 'ok';
-
-  } else if (op === 'elimination') {
     const tgt = PLANETS.find(p => p.id === pending.elimTarget);
     const result = orderResults[fac];
     detail = `Objetivo: ${tgt ? tgt.name : '?'}`;
@@ -3439,22 +3698,24 @@ function renderMap() {
   // ── Fleet tokens ──
   const fleetG = svgNS('g');
   const fleetMap = {
-    tyranid: state.fleets?.['tyranid-a'],
-    necron:  state.fleets?.['necron-a'],
-    ultra:   state.fleets?.['ultra-a'],
+    tyranid: [state.fleets?.['tyranid-a'], state.fleets?.['tyranid-b'], state.fleets?.['tyranid-c']],
+    necron:  [state.fleets?.['necron-a'],  state.fleets?.['necron-b'],  state.fleets?.['necron-c']],
+    ultra:   [state.fleets?.['ultra-a'],   state.fleets?.['ultra-b'],   state.fleets?.['ultra-c']],
   };
   // Offsets so multiple fleets on same planet don't overlap
   const fleetOff = { tyranid:-16, necron:0, ultra:16 };
 
-  for (const [fac, planetName] of Object.entries(fleetMap)) {
-    if (!planetName || planetName === 'En órbita / tránsito') continue;
-    const planet = PLANETS.find(p => p.name === planetName);
-    if (!planet) continue;
-    const pos = MAP_PLANETS[planet.id];
-    if (!pos) continue;
-    const fx = pos.x + fleetOff[fac];
-    const fy = pos.y - R - 16;
-    fleetG.appendChild(makeFleetToken(fac, fx, fy));
+  for (const [fac, planetNames] of Object.entries(fleetMap)) {
+    for (const planetName of planetNames) {
+      if (!planetName || planetName === 'En órbita / tránsito') continue;
+      const planet = PLANETS.find(p => p.name === planetName);
+      if (!planet) continue;
+      const pos = MAP_PLANETS[planet.id];
+      if (!pos) continue;
+      const fx = pos.x + fleetOff[fac];
+      const fy = pos.y - R - 16;
+      fleetG.appendChild(makeFleetToken(fac, fx, fy));
+    }
   }
   svg.appendChild(fleetG);
 
